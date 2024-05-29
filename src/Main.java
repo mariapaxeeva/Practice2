@@ -4,7 +4,6 @@ public class Main {
     public static void main(String[] args) {
         try {
             MainWindow app = new MainWindow(); //Создаем экземпляр нашего приложения
-            app.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
