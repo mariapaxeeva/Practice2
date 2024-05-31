@@ -1,6 +1,7 @@
 package graphics.Map;
 
-import java.awt.Color;
+import java.awt.*;
+import java.io.File;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,12 +28,20 @@ public class Map extends JTable {
             this.getColumnModel().getColumn(i).setMaxWidth(this.CELL_SIZE);
         }
         setBorder(BorderFactory.createLineBorder(new Color (0x333333)));
+        setDefaultRenderer(Object.class, new Renderer());
+        try {
+            Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File("src\\resources\\creatures.ttf")).deriveFont(7f);
+            setFont(myFont);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void cellsValue() {
         for (int x = 0; x < this.MAP_SIZE; x++) {
             for (int y = 0; y < this.MAP_SIZE; y++) {
-                setValueAt(0x0000, y, x);
+                setValueAt(0x0000L, y, x);
             }
         }
     }

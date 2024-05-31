@@ -6,9 +6,12 @@ public class MapCoder {
     private final static int LANDSCAPE_TYPE_SHIFT       = 0;
     public final static int LANDSCAPE_TYPE_EMPTY        = 0x0;
     public final static int LANDSCAPE_TYPE_WATER        = 0x1;
-    public final static int LANDSCAPE_TYPE_PLAIN        = 0x3;
-    public final static int LANDSCAPE_TYPE_HILL         = 0x4;
-    public final static int LANDSCAPE_TYPE_MOUNTAIN     = 0x5;
+    public final static int LANDSCAPE_TYPE_PLAIN        = 0x2;
+    public final static int LANDSCAPE_TYPE_HILL         = 0x3;
+    public final static int LANDSCAPE_TYPE_MOUNTAIN     = 0x4;
+    public final static int LANDSCAPE_TYPE_GRASS_PLAIN  = 0x5;
+    public final static int LANDSCAPE_TYPE_GRASS_HILL   = 0x6;
+    public final static int LANDSCAPE_TYPE_GRASS_MOUNTAIN  = 0x7;
     // Типы лосей
     private final static long ELK_TYPE_MASK             = 0x0000_0000_0000_0018L;
     private final static int ELK_TYPE_SHIFT             = 3;
@@ -79,11 +82,11 @@ public class MapCoder {
         return decode(uc, ELK_ENERGY_MASK, ELK_ENERGY_SHIFT);
     }
 
-    public final static long encodeElkSatiety(long uc, int u) {
+    public final static long encodeElkHunger(long uc, int u) {
         return encode(uc, u, ELK_HUNGER_MASK, ELK_HUNGER_SHIFT);
     }
 
-    public final static int decodeElkSatiety(long uc) {
+    public final static int decodeElkHunger(long uc) {
         return decode(uc, ELK_HUNGER_MASK, ELK_HUNGER_SHIFT);
     }
 
