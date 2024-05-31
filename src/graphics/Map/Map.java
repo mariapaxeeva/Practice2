@@ -1,6 +1,7 @@
-package graphics;
+package graphics.Map;
 
-import javax.swing.JTable;
+import java.awt.Color;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class Map extends JTable {
@@ -14,12 +15,18 @@ public class Map extends JTable {
     }
 
     private void view() {
-        setModel(new DefaultTableModel(this.MAP_SIZE, this.MAP_SIZE));
+        setModel(new DefaultTableModel(this.MAP_SIZE, this.MAP_SIZE) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
         setRowHeight(this.CELL_SIZE);
         for (int i = 0; i < this.MAP_SIZE; i++) {
             this.getColumnModel().getColumn(i).setMinWidth(this.CELL_SIZE);
             this.getColumnModel().getColumn(i).setMaxWidth(this.CELL_SIZE);
         }
+        setBorder(BorderFactory.createLineBorder(new Color (0x333333)));
     }
 
     private void cellsValue() {

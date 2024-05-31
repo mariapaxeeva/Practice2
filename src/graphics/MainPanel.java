@@ -1,5 +1,7 @@
 package graphics;
 
+import graphics.Map.Map;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
