@@ -2,6 +2,9 @@ package graphics.Map;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -39,9 +42,43 @@ public class Map extends JTable {
     }
 
     private void cellsValue() {
-        for (int x = 0; x < this.MAP_SIZE; x++) {
-            for (int y = 0; y < this.MAP_SIZE; y++) {
-                setValueAt(0x0000L, y, x);
+//        for (int x = 0; x < this.MAP_SIZE; x++) {
+//            for (int y = 0; y < this.MAP_SIZE; y++) {
+//                setValueAt(0x0000L, y, x);
+//            }
+//        }
+        long[][] data = new long[MAP_SIZE][MAP_SIZE];
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        try {
+            fis = new FileInputStream("src\\resources\\mydata.dat");
+            ois = new ObjectInputStream(fis);
+            data = (long[][]) ois.readObject();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ois != null) {
+                try {
+                    ois.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        for (int y = 0; y < MAP_SIZE; y++) {
+            for (int x = 0; x < MAP_SIZE; x++) {
+                setValueAt(data[y][x], y, x);
             }
         }
     }

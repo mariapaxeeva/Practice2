@@ -7,19 +7,18 @@ import java.awt.*;
 public class Renderer extends DefaultTableCellRenderer {
 
     private final static int COLOR_EMPTY                            = 0xF0F0F0;
-    private final static int COLOR_UNDEFINED                        = 0xC22331;
+    private final static int COLOR_UNDEFINED                        = 0xC4240C;
     private final static int LANDSCAPE_TYPE_COLOR_WATER             = 0x60A4B1;
-    private final static int LANDSCAPE_TYPE_COLOR_PLAIN             = 0xDDB985;
-    private final static int LANDSCAPE_TYPE_COLOR_HILL              = 0xD1AF7D;
-    private final static int LANDSCAPE_TYPE_COLOR_MOUNTAIN          = 0xB3D77E;
-    private final static int LANDSCAPE_TYPE_COLOR_GRASS_PLAIN       = 0xC27890;
-    private final static int LANDSCAPE_TYPE_COLOR_GRASS_HILL        = 0x3D67CC;
-    private final static int LANDSCAPE_TYPE_COLOR_GRASS_MOUNTAIN    = 0xC7651C;
-    private final static int ELK_TYPE_COLOR_MALE                    = 0x1D8EA3;
-    private final static int ELK_TYPE_COLOR_FEMALE                  = 0xB82C8F;
-    private final static int KILLER_TYPE_COLOR_HUNTER               = 0x1D8EA3;
-    private final static int KILLER_TYPE_COLOR_PREDATOR             = 0xB82C8F;
-    private final static int PLANT_TYPE_COLOR_FOOD                  = 0x22B14C;
+    private final static int LANDSCAPE_TYPE_COLOR_PLAIN             = 0xE8D13A;
+    private final static int LANDSCAPE_TYPE_COLOR_MOUNTAIN          = 0x3D2B06;
+    private final static int LANDSCAPE_TYPE_COLOR_GRASS_PLAIN       = 0x5ABD20;
+    private final static int LANDSCAPE_TYPE_COLOR_GRASS_MOUNTAIN    = 0x232B04;
+    private final static int LANDSCAPE_TYPE_COLOR_OUTSIDE           = 0x8A8A8A;
+    private final static int ELK_TYPE_COLOR_MALE                    = 0x2A27C4;
+    private final static int ELK_TYPE_COLOR_FEMALE                  = 0xC75DC2;
+    private final static int KILLER_TYPE_COLOR_HUNTER               = 0x233D20;
+    private final static int KILLER_TYPE_COLOR_PREDATOR             = 0xA10A2A;
+    private final static int PLANT_TYPE_COLOR_FOOD                  = 0x7BC40C;
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -43,10 +42,6 @@ public class Renderer extends DefaultTableCellRenderer {
                 color = LANDSCAPE_TYPE_COLOR_PLAIN;
                 break;
             }
-            case MapCoder.LANDSCAPE_TYPE_HILL: {
-                color = LANDSCAPE_TYPE_COLOR_HILL;
-                break;
-            }
             case MapCoder.LANDSCAPE_TYPE_MOUNTAIN: {
                 color = LANDSCAPE_TYPE_COLOR_MOUNTAIN;
                 break;
@@ -55,12 +50,12 @@ public class Renderer extends DefaultTableCellRenderer {
                 color = LANDSCAPE_TYPE_COLOR_GRASS_PLAIN;
                 break;
             }
-            case MapCoder.LANDSCAPE_TYPE_GRASS_HILL: {
-                color = LANDSCAPE_TYPE_COLOR_GRASS_HILL;
-                break;
-            }
             case MapCoder.LANDSCAPE_TYPE_GRASS_MOUNTAIN: {
                 color = LANDSCAPE_TYPE_COLOR_GRASS_MOUNTAIN;
+                break;
+            }
+            case MapCoder.LANDSCAPE_TYPE_OUTSIDE: {
+                color = LANDSCAPE_TYPE_COLOR_OUTSIDE;
                 break;
             }
             default: {
