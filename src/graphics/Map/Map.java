@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class Map extends JTable {
@@ -30,7 +32,7 @@ public class Map extends JTable {
             this.getColumnModel().getColumn(i).setMinWidth(this.CELL_SIZE);
             this.getColumnModel().getColumn(i).setMaxWidth(this.CELL_SIZE);
         }
-        setBorder(BorderFactory.createLineBorder(new Color (0x333333)));
+        setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0x333333), 10), new TitledBorder(new LineBorder(new Color(0xFEFEFE)), "Алтайский край", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION)));
         setDefaultRenderer(Object.class, new Renderer());
         try {
             Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File("src\\resources\\creatures.ttf")).deriveFont(7f);

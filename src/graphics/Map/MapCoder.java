@@ -7,9 +7,9 @@ public class MapCoder {
     public final static int LANDSCAPE_TYPE_EMPTY        = 0x0;
     public final static int LANDSCAPE_TYPE_WATER        = 0x1;
     public final static int LANDSCAPE_TYPE_PLAIN        = 0x2;
-    public final static int LANDSCAPE_TYPE_MOUNTAIN     = 0x3;
-    public final static int LANDSCAPE_TYPE_GRASS_PLAIN  = 0x4;
-    public final static int LANDSCAPE_TYPE_GRASS_MOUNTAIN  = 0x5;
+    public final static int LANDSCAPE_TYPE_HILL         = 0x3;
+    public final static int LANDSCAPE_TYPE_MOUNTAIN     = 0x4;
+    public final static int LANDSCAPE_TYPE_GRASS_PLAIN  = 0x5;
     public final static int LANDSCAPE_TYPE_OUTSIDE      = 0x6;
     // Типы лосей
     private final static long ELK_TYPE_MASK             = 0x0000_0000_0000_0018L;
