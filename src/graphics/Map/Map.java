@@ -44,11 +44,6 @@ public class Map extends JTable {
     }
 
     private void cellsValue() {
-//        for (int x = 0; x < this.MAP_SIZE; x++) {
-//            for (int y = 0; y < this.MAP_SIZE; y++) {
-//                setValueAt(0x0000L, y, x);
-//            }
-//        }
         long[][] data = new long[MAP_SIZE][MAP_SIZE];
         FileInputStream fis = null;
         ObjectInputStream ois = null;
@@ -83,5 +78,94 @@ public class Map extends JTable {
                 setValueAt(data[y][x], y, x);
             }
         }
+    }
+
+
+    // x, y - координаты ячейки
+    // u    - последовательность битов
+    public int getLandscapeType(int y, int x) {
+        return MapCoder.decodeLandscapeType(getDataAt(y, x));
+    }
+    public int getElkType(int y, int x) {
+        return MapCoder.decodeElkType(getDataAt(y, x));
+    }
+    public int getElkAge(int y, int x) {
+        return MapCoder.decodeElkAge(getDataAt(y, x));
+    }
+    public int getElkEnergy(int y, int x) {
+        return MapCoder.decodeElkHunger(getDataAt(y, x));
+    }
+    public int getElkHunger(int y, int x) {
+        return MapCoder.decodeElkHunger(getDataAt(y, x));
+    }
+    public int getElkPregnancy(int y, int x) {
+        return MapCoder.decodeElkPregnancy(getDataAt(y, x));
+    }
+    public int getPlantType(int y, int x) {
+        return MapCoder.decodePlantType(getDataAt(y, x));
+    }
+    public int getPlantFood(int y, int x) {
+        return MapCoder.decodePlantFood(getDataAt(y, x));
+    }
+    public int getKillerType(int y, int x) {
+        return MapCoder.decodeKillerType(getDataAt(y, x));
+    }
+    public int getActiveFlagElk(int y, int x) {
+        return MapCoder.decodeActiveFlagElk(getDataAt(y, x));
+    }
+    public int getActiveFlagPlant(int y, int x) {
+        return MapCoder.decodeActiveFlagPlant(getDataAt(y, x));
+    }
+
+    public void setLandscapeType(int u, int y, int x) {
+        setDataAt(MapCoder.encodeLandscapeType(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 7)), y, x);
+    }
+
+    public void setElkType(int u, int y, int x) {
+        setDataAt(MapCoder.encodeElkType(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 3)), y, x);
+    }
+
+    public void setElkAge(int u, int y, int x) {
+        setDataAt(MapCoder.encodeElkAge(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 16383)), y, x);
+    }
+
+    public void setElkEnergy(int u, int y, int x) {
+        setDataAt(MapCoder.encodeElkEnergy(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 63)), y, x);
+    }
+
+    public void setElkHunger(int u, int y, int x) {
+        setDataAt(MapCoder.encodeElkHunger(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 63)), y, x);
+    }
+
+    public void setElkPregnancy(int u, int y, int x) {
+        setDataAt(MapCoder.encodeElkPregnancy(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 255)), y, x);
+    }
+
+    public void setPlantType(int u, int y, int x) {
+        setDataAt(MapCoder.encodePlantType(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 1)), y, x);
+    }
+
+    public void setPlantFood(int u, int y, int x) {
+        setDataAt(MapCoder.encodePlantFood(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 63)), y, x);
+    }
+
+    public void setKillerType(int u, int y, int x) {
+        setDataAt(MapCoder.encodeKillerType(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 3)), y, x);
+    }
+
+    public void setActiveFlagElk(int u, int y, int x) {
+        setDataAt(MapCoder.encodeActiveFlagElk(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 1)), y, x);
+    }
+
+    public void setActiveFlagPlant(int u, int y, int x) {
+        setDataAt(MapCoder.encodeActiveFlagPlant(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 1)), y, x);
+    }
+
+    public void setDataAt(long uc, int y, int x) {
+        setValueAt(uc, y, x);
+    }
+
+    public long getDataAt(int y, int x) {
+        return (long) getValueAt(y, x);
     }
 }
