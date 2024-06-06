@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.RoundRectangle2D;
 
 public class ControlPanel extends JPanel{
     private JButton onButton;
@@ -29,8 +28,11 @@ public class ControlPanel extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 if (isOff) {
                     onButton.setIcon(new ImageIcon("src\\resources\\offButton.png"));
+                    pauseButton.setIcon(new ImageIcon("src\\resources\\pauseButton.png"));
+                    pauseButton.setEnabled(false);
                 } else {
                     onButton.setIcon(new ImageIcon("src\\resources\\onButton.png"));
+                    pauseButton.setEnabled(true);
                 }
                 isOff = !isOff;
             }
@@ -39,6 +41,7 @@ public class ControlPanel extends JPanel{
 
         // Кнопка паузы/продолжения симуляции
         this.pauseButton = new CustomButtons(new ImageIcon("src\\resources\\pauseButton.png"));
+        pauseButton.setEnabled(false);
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
