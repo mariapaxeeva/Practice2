@@ -1,6 +1,10 @@
 package graphics.Map;
 
+import graphics.MainPanel;
+
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,6 +21,7 @@ public class Map extends JTable {
     public Map() {
         view();
         cellsValue();
+        listeners();
         setVisible(true);
     }
 
@@ -167,5 +172,16 @@ public class Map extends JTable {
 
     public long getDataAt(int y, int x) {
         return (long) getValueAt(y, x);
+    }
+
+    private void listeners() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = rowAtPoint(e.getPoint());
+                int y = columnAtPoint(e.getPoint());
+                MainPanel.creatureInfo.update(x, y);
+            }
+        });
     }
 }
