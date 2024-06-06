@@ -49,6 +49,7 @@ public class MapCoder {
     private final static long ACTIVE_FLAG_PLANT_MASK    = 0x8000_0000_0000_0000L;
     private final static int ACTIVE_FLAG_PLANT_SHIFT    = 63;
 
+    // uc - данная последовательность битов, u - биты, которые требуется записать
     public final static long encodeLandscapeType(long uc, int u) {
         return encode(uc, u, LANDSCAPE_TYPE_MASK, LANDSCAPE_TYPE_SHIFT);
     }
@@ -105,11 +106,11 @@ public class MapCoder {
         return decode(uc, PLANT_TYPE_MASK, PLANT_TYPE_SHIFT);
     }
 
-    public final static long encodePlantFruits(long uc, int u) {
+    public final static long encodePlantFood(long uc, int u) {
         return encode(uc, u, PLANT_FOOD_MASK, PLANT_FOOD_SHIFT);
     }
 
-    public final static int decodePlantFruits(long uc) {
+    public final static int decodePlantFood(long uc) {
         return decode(uc, PLANT_FOOD_MASK, PLANT_FOOD_SHIFT);
     }
 
