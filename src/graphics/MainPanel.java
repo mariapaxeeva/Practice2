@@ -26,8 +26,9 @@ public class MainPanel extends JPanel {
         panels();
         addMapPanel();
         addControlPanel();
-        addCreatureInfoPanel();
+        addStatisticsPanel();
         addLandscapeInfoPanel();
+        addCreatureInfoPanel();
         setVisible(true);
     }
 
