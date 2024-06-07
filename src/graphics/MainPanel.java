@@ -6,35 +6,44 @@ import graphics.InfoPanels.Events;
 import graphics.InfoPanels.LandscapeInfo;
 import graphics.InfoPanels.Statistics;
 import graphics.Map.Map;
+import graphics.ParametersPanel.ParametersPanel;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 public class MainPanel extends JPanel {
 
-    public static JPanel        mapPanelGroup;
-    public static JPanel        infoPanelGroup;
-    public static Map           map;
-    public static ControlPanel  controlPanel;
-    public static CreatureInfo  creatureInfo;
-    public static Events        events;
-    public static LandscapeInfo landscapeInfo;
-    public static Statistics    statistics;
+    public static JPanel          parametersPanelGroup;
+    public static JPanel          mapPanelGroup;
+    public static JPanel          infoPanelGroup;
+    public static Map             map;
+    public static ControlPanel    controlPanel;
+    public static CreatureInfo    creatureInfo;
+    public static Events          events;
+    public static LandscapeInfo   landscapeInfo;
+    public static Statistics      statistics;
+    public static ParametersPanel parameters;
 
     public MainPanel(){
         view();
         panels();
+        addParametersPanel();
         addMapPanel();
         addControlPanel();
         addStatisticsPanel();
         addLandscapeInfoPanel();
         addCreatureInfoPanel();
+        addEventsPanel();
         setVisible(true);
     }
 
     private void view() { setLayout(new BoxLayout(this, BoxLayout.X_AXIS)); }
 
     private void panels(){
+        parametersPanelGroup = new JPanel();
+        parametersPanelGroup.setLayout(new BoxLayout(parametersPanelGroup, BoxLayout.Y_AXIS));
+        add(parametersPanelGroup);
+
         mapPanelGroup = new JPanel();
         mapPanelGroup.setLayout(new BoxLayout(mapPanelGroup, BoxLayout.Y_AXIS));
         add(mapPanelGroup);
@@ -72,5 +81,10 @@ public class MainPanel extends JPanel {
     private void addStatisticsPanel() {
         statistics = new Statistics();
         infoPanelGroup.add(statistics);
+    }
+
+    private void addParametersPanel() {
+        parameters = new ParametersPanel();
+        parametersPanelGroup.add(parameters);
     }
 }
