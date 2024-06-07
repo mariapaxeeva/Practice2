@@ -181,6 +181,7 @@ public class Map extends JTable {
                 int x = rowAtPoint(e.getPoint());
                 int y = columnAtPoint(e.getPoint());
                 MainPanel.creatureInfo.update(x, y);
+                MainPanel.landscapeInfo.update(x, y);
             }
         });
     }
