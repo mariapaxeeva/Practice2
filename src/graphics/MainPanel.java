@@ -11,18 +11,19 @@ import graphics.ParametersPanel.ParametersPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+// Класс реализует главную панель главного окна
 public class MainPanel extends JPanel {
 
-    public static JPanel          parametersPanelGroup;
-    public static JPanel          mapPanelGroup;
-    public static JPanel          infoPanelGroup;
-    public static Map             map;
-    public static ControlPanel    controlPanel;
-    public static CreatureInfo    creatureInfo;
-    public static Events          events;
-    public static LandscapeInfo   landscapeInfo;
-    public static Statistics      statistics;
-    public static ParametersPanel parameters;
+    public static JPanel          parametersPanelGroup;    // группа панелей для взаимодействия пользователя с моделью
+    public static JPanel          mapPanelGroup;           // группа панелей, связанных с картой
+    public static JPanel          infoPanelGroup;          // группа информационных панелей
+    public static Map             map;                     // панель карты
+    public static ControlPanel    controlPanel;            // панель с кнопками запуска/приостановки/прекращения симуляции
+    public static CreatureInfo    creatureInfo;            // панель с информацией о живом существе на данной территории
+    public static Events          events;                  // панель, отображающая историю случившихся событий
+    public static LandscapeInfo   landscapeInfo;           // панель с информацией о ландшафте данной территории
+    public static Statistics      statistics;              // статистическая информационная панель
+    public static ParametersPanel parameters;              // панель для управления моделью
 
     public MainPanel(){
         view();
@@ -39,6 +40,7 @@ public class MainPanel extends JPanel {
 
     private void view() { setLayout(new BoxLayout(this, BoxLayout.X_AXIS)); }
 
+    // Метод добавляет группы панелей на главную панель
     private void panels(){
         parametersPanelGroup = new JPanel();
         parametersPanelGroup.setLayout(new BoxLayout(parametersPanelGroup, BoxLayout.Y_AXIS));

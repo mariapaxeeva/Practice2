@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 
+// Класс реализует внешний вид JButton: скругленные, с изображением,
+// меняющие цвет рамки при наведении
 public class CustomButtons extends JButton implements MouseListener {
 
     public CustomButtons(ImageIcon icon) {
@@ -18,6 +20,7 @@ public class CustomButtons extends JButton implements MouseListener {
         addMouseListener(this);
     }
 
+    // Отрисовка формы и цвета кнопки (в частности при нажатии)
     protected void paintComponent(Graphics g)
     {
         if (getModel().isArmed())
@@ -32,13 +35,15 @@ public class CustomButtons extends JButton implements MouseListener {
         super.paintComponent(g);
     }
 
+    // Отрисовка рамки кнопки
     protected void paintBorder(Graphics g)
     {
         g.setColor(getForeground());
         g.drawOval(0, 0, getSize().width-1, getSize().height-1);
     }
 
-    Shape shape;
+    Shape shape; // Область кнопки
+    // Метод определяет принадлежность точки с координатами (x,y) к области кнопки
     public boolean contains(int x, int y)
     {
         if (shape == null ||!shape.getBounds().equals(getBounds()))
@@ -63,11 +68,13 @@ public class CustomButtons extends JButton implements MouseListener {
     public void mouseReleased(MouseEvent e) {
     }
 
+    // Если кнопка в фокусе мыши, то смена цвета рамки
     @Override
     public void mouseEntered(MouseEvent e) {
         this.setForeground(new Color(0x6E6E6E));
     }
 
+    // Если кнопка вышла из фокуса мыши, то цвет рамки по умолчанию
     @Override
     public void mouseExited(MouseEvent e) {
         this.setForeground(new Color(0x333333));

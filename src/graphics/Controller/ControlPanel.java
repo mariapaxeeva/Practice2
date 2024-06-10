@@ -1,5 +1,6 @@
 package graphics.Controller;
 
+import graphics.ParametersPanel.ParametersPanel;
 import logic.BasicLogic;
 
 import javax.swing.*;
@@ -7,10 +8,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static graphics.MainPanel.parameters;
+
+// Класс реализует панель управления запуском/приостановкой/остановкой работы модели
 public class ControlPanel extends JPanel{
-    private JButton onButton;
-    private JButton pauseButton;
-    private boolean isSuspended = true, isOff = true;
+    private JButton onButton; // Кнопка вкл/выкл
+    private JButton pauseButton; // Кнопка паузы/продолжения
+    private boolean isSuspended = true, isOff = true; // Флаги приостановки и выключенности симуляции
 
     public ControlPanel() {
         view();
@@ -18,10 +22,12 @@ public class ControlPanel extends JPanel{
         setVisible(true);
     }
 
+    // Внешний вид панели, расположение на ней компонентов
     private void view() {
         setLayout(new FlowLayout(FlowLayout.CENTER));
     }
 
+    // Метод добавляет кастомные кнопки на панель и обеспечивает реагирование на нажатие
     private void buttons() {
         // Кнопка начала/остановки симуляции
         this.onButton = new CustomButtons(new ImageIcon("src\\resources\\offButton.png"));
@@ -32,9 +38,12 @@ public class ControlPanel extends JPanel{
                     onButton.setIcon(new ImageIcon("src\\resources\\offButton.png"));
                     pauseButton.setIcon(new ImageIcon("src\\resources\\pauseButton.png"));
                     pauseButton.setEnabled(false);
+                    parameters.setEnabledSettings(true);
                 } else {
+                    BasicLogic.start();
                     onButton.setIcon(new ImageIcon("src\\resources\\onButton.png"));
                     pauseButton.setEnabled(true);
+                    parameters.setEnabledSettings(false);
                 }
                 isOff = !isOff;
             }

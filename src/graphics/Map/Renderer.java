@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
+// Класс, отвечающий за отрисовку карты
 public class Renderer extends DefaultTableCellRenderer {
 
     private final static int COLOR_EMPTY                            = 0xF0F0F0;
@@ -20,6 +21,8 @@ public class Renderer extends DefaultTableCellRenderer {
     private final static int KILLER_TYPE_COLOR_PREDATOR             = 0xA10A2A;
     private final static int PLANT_TYPE_COLOR_FOOD                  = 0x0E5200;
 
+    // Метод используется для настройки средства визуализации (JTable)
+    // перед рисованием. Возвращает данный класс для рисования ячейки.
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, "", isSelected, hasFocus, row, column);
@@ -30,6 +33,8 @@ public class Renderer extends DefaultTableCellRenderer {
         return this;
     }
 
+    // Параметр cellData - 64 бита, кодирующие 1 ячейку
+    // Получение цвета фона (ландшафта)
     private static int getBackgroundColor(long cellData) {
         int color = COLOR_EMPTY;
         int landscapeType = MapCoder.decodeLandscapeType(cellData);
@@ -66,6 +71,7 @@ public class Renderer extends DefaultTableCellRenderer {
         return color;
     }
 
+    // Получение цвета шрифта (сущностей, находящихся в ячейке)
     private static int getForegroundColor(long cellData) {
         int color = COLOR_EMPTY;
         int elkType = MapCoder.decodeElkType(cellData);
@@ -89,7 +95,7 @@ public class Renderer extends DefaultTableCellRenderer {
         }
         else if (plantType != MapCoder.PLANT_TYPE_EMPTY) {
             switch (plantType) {
-                case MapCoder.PLANT_TYPE_FOOD: {
+                case MapCoder.PLANT_TYPE_PLANT: {
                     color = PLANT_TYPE_COLOR_FOOD;
                     break;
                 }
@@ -121,6 +127,8 @@ public class Renderer extends DefaultTableCellRenderer {
         return color;
     }
 
+    // Метод декодирует информацию о сущности в ячейке и возвращает
+    // соответствующую ей в кастомном шрифте букву
     private static char getCell(long cellData) {
         char cell = ' ';
         int elkType = MapCoder.decodeElkType(cellData);

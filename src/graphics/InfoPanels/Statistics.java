@@ -1,14 +1,15 @@
 package graphics.InfoPanels;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 import graphics.Map.MapCoder;
 
+// Класс реализует панель с общей информацией о процессе моделирования
 public class Statistics extends JPanel {
-    private JLabel text;
-    private String info;
+    private JLabel text; // Строка с информацией
 
     public Statistics() {
         view();
@@ -16,17 +17,23 @@ public class Statistics extends JPanel {
         setVisible(true);
     }
 
+    // Внешний вид панели, расположение на ней компонентов
     private void view() {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        setBorder(new TitledBorder("Статистика"));
-        setPreferredSize(new Dimension(450, 250));
+        setBorder(new TitledBorder(new LineBorder(Color.DARK_GRAY),
+                "Статистика", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
+                new Font("serif", Font.ROMAN_BASELINE, 14), Color.DARK_GRAY));
+        setPreferredSize(new Dimension(380, 260));
     }
 
+    // Отображение информации на панели
     private void text() {
         this.text = new JLabel("-");
+        text.setFont(new Font("Arial Narrow", Font.ROMAN_BASELINE, 13));
         add(this.text);
     }
 
+    // Обновление отображаемой информации (date - количество прошедших дней)
     public void update(int date) {
         String info = String.format("<html>С начала симуляции прошло %s"
                     + "<br> Общая площадь территории: 167 996 км<sup>2</sup> (%s ячеек)"
@@ -71,44 +78,6 @@ public class Statistics extends JPanel {
                     0,
                     0);
         this.text.setText(info);
-    }
-
-    public static String formatPlantType(int type) {
-        String plant = "-";
-        if (type == MapCoder.PLANT_TYPE_PLANT) { plant = "+"; }
-        else { plant = "-"; }
-        return plant;
-    }
-
-    public static String formatLandscapeType(int type) {
-        String landscape = "-";
-        switch (type) {
-            case MapCoder.LANDSCAPE_TYPE_PLAIN: {
-                landscape = "Равнина";
-                break;
-            }
-            case MapCoder.LANDSCAPE_TYPE_HILL: {
-                landscape = "Холм";
-                break;
-            }
-            case MapCoder.LANDSCAPE_TYPE_MOUNTAIN: {
-                landscape = "Горы";
-                break;
-            }
-            case MapCoder.LANDSCAPE_TYPE_WATER: {
-                landscape = "Вода";
-                break;
-            }
-            case MapCoder.LANDSCAPE_TYPE_OUTSIDE: {
-                landscape = "Прилежащие территории";
-                break;
-            }
-            default: {
-                landscape = "Не определён";
-                break;
-            }
-        }
-        return landscape;
     }
 
     public void reset() {

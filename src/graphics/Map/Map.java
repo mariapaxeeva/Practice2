@@ -14,6 +14,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+// Класс, реализующий модель карты Алтайского края
 public class Map extends JTable {
     private final int MAP_SIZE = 65;
     private final int CELL_SIZE = 10;
@@ -25,7 +26,9 @@ public class Map extends JTable {
         setVisible(true);
     }
 
+    // Внешний вид карты и ее свойства
     private void view() {
+        // Создание таблицы 65х65 с нередактируемыми ячейками 10х10 пикселей
         setModel(new DefaultTableModel(this.MAP_SIZE, this.MAP_SIZE) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -37,8 +40,13 @@ public class Map extends JTable {
             this.getColumnModel().getColumn(i).setMinWidth(this.CELL_SIZE);
             this.getColumnModel().getColumn(i).setMaxWidth(this.CELL_SIZE);
         }
-        setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0x333333), 10), new TitledBorder(new LineBorder(new Color(0xFEFEFE)), "Алтайский край", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION)));
+        setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0x333333),
+                10), new TitledBorder(new LineBorder(new Color(0xFEFEFE)),
+                "Алтайский край", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION,
+                new Font("serif", Font.ROMAN_BASELINE, 14), Color.BLACK)));
         setDefaultRenderer(Object.class, new Renderer());
+
+        // Установка кастомного шрифта для отображения сущностей в виде значков
         try {
             Font myFont = Font.createFont(Font.TRUETYPE_FONT, new File("src\\resources\\creatures.ttf")).deriveFont(7f);
             setFont(myFont);
@@ -48,6 +56,7 @@ public class Map extends JTable {
         }
     }
 
+    // Метод читает значения ячеек карты из файла и устанавливает их
     private void cellsValue() {
         long[][] data = new long[MAP_SIZE][MAP_SIZE];
         FileInputStream fis = null;
@@ -174,6 +183,7 @@ public class Map extends JTable {
         return (long) getValueAt(y, x);
     }
 
+    // Метод обечпечивает реакцию на нажатие на ячейку с координатами (x, y)
     private void listeners() {
         addMouseListener(new MouseAdapter() {
             @Override

@@ -3,6 +3,7 @@ package graphics.ParametersPanel;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -31,17 +32,23 @@ public class ParametersPanel extends JPanel {
     // Внешний вид панели, расположение на ней компонентов
     private void view() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(new TitledBorder("Параметры модели"));
+        setBorder(new TitledBorder(new LineBorder(Color.DARK_GRAY),
+                "Параметры модели", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
+                new Font("serif", Font.ROMAN_BASELINE, 20), Color.DARK_GRAY));
         setPreferredSize(new Dimension(280, 0));
     }
 
     // Вид вложенных панелей, расположение на них компонентов
     private void panels() {
-        settings.setBorder(BorderFactory.createTitledBorder("Настройки"));
+        settings.setBorder(new TitledBorder(new LineBorder(Color.DARK_GRAY),
+                "Настройки", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
+                new Font("serif", Font.ROMAN_BASELINE, 14), Color.DARK_GRAY));
         settings.setLayout(new GridLayout(8, 1, 0, 10));
         this.add(settings);
 
-        disasterButtons.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Действия"), new EmptyBorder(20, 35, 30, 35)));
+        disasterButtons.setBorder(new CompoundBorder(new TitledBorder (new LineBorder(Color.DARK_GRAY),
+                "Действия", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
+                new Font("serif", Font.ROMAN_BASELINE, 14), Color.DARK_GRAY), new EmptyBorder(20, 35, 30, 35)));
         disasterButtons.setLayout(new GridLayout(3, 1, 0, 30));
         this.add(disasterButtons);
     }
@@ -84,7 +91,8 @@ public class ParametersPanel extends JPanel {
     // и текущим значением на панель настроек.
     private void setSlider(JSlider slider, String text) {
         JLabel label = new JLabel();
-        label.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+        label.setFont(new Font("serif", Font.ROMAN_BASELINE, 14));
+        label.setBorder(BorderFactory.createEmptyBorder(0, 13, 0, 0));
         label.setText(text + slider.getValue() + "%");
         slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {

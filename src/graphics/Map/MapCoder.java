@@ -1,5 +1,6 @@
 package graphics.Map;
 
+// Класс, реализующий битовое представление информации о каждой ячейке карты
 public class MapCoder {
     // Типы ландшафта
     private final static long LANDSCAPE_TYPE_MASK       = 0x0000_0000_0000_0007L;
@@ -33,8 +34,8 @@ public class MapCoder {
     private final static long PLANT_TYPE_MASK           = 0x0000_0080_0000_0000L;
     private final static int PLANT_TYPE_SHIFT           = 39;
     public final static int PLANT_TYPE_EMPTY            = 0x0;
-    public final static int PLANT_TYPE_FOOD             = 0x1;
-    // Съедобное растение
+    public final static int PLANT_TYPE_PLANT            = 0x1;
+    // Количество съедобных растений
     private final static long PLANT_FOOD_MASK           = 0x0000_3F00_0000_0000L;
     private final static int PLANT_FOOD_SHIFT           = 40;
     // Типы врагов
@@ -138,10 +139,12 @@ public class MapCoder {
         return decode(uc, ACTIVE_FLAG_PLANT_MASK, ACTIVE_FLAG_PLANT_SHIFT);
     }
 
+    // Общий для всех полей метод кодирования информации
     private final static long encode(long uc, int u, long mask, int shift) {
         return (uc & ~mask) | ((long) u << shift & mask);
     }
 
+    // Общий для всех полей метод декодирования информации
     private final static int decode(long uc, long mask, int shift) {
         return (int) ((uc & mask) >>> shift);
     }
