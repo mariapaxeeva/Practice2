@@ -71,16 +71,76 @@ public class BasicLogic {
     // Метод, побуждающий к выполнению действия животоных, охотников и растений
     private static void perform(long cellData, int y, int x) {
         if (MapCoder.decodeActiveFlagCreature(cellData) == 1 && (MapCoder.decodeElkType(cellData) != MapCoder.ELK_TYPE_EMPTY || MapCoder.decodeKillerType(cellData) != MapCoder.KILLER_TYPE_EMPTY)) {
-            if (tryToGiveBirth(cellData, y, x)
+            if (MainPanel.map.getKillerType(y, x) != MapCoder.KILLER_TYPE_HUNTER
+                    && (tryToDie(cellData, y, x)
+                    || tryToGiveBirth(cellData, y, x)
                     || tryToEat(cellData, y, x)
                     || tryToSleep(cellData, y, x)
                     || tryToGetPregnant(cellData, y, x)
-                    || tryToMove(cellData, y, x, 0, 0)) {}
+                    || tryToMove(cellData, y, x, 0, 0))) {}
+            if (MainPanel.map.getKillerType(y, x) == MapCoder.KILLER_TYPE_HUNTER
+                    && (tryToKill(cellData, y, x)
+                    || tryToMove(cellData, y, x, 0, 0))) {}
         }
         if (MapCoder.decodeActiveFlagPlant(cellData) == 1 && MapCoder.decodePlantType(cellData) != MapCoder.PLANT_TYPE_EMPTY) {
             tryToGrowFood(cellData, y, x);
             tryToSpreadFood(cellData, y, x);
         }
+    }
+
+    // Метод реализует смерть животных от разных факторов.
+    private static boolean tryToDie(long cellData, int y, int x) {
+        Events events = MainPanel.events;
+        boolean isElk = MainPanel.map.getElkType(y, x) == MapCoder.ELK_TYPE_EMPTY ? false : true;
+        int energy = MapCoder.decodeCreatureEnergy(cellData);
+        if (energy == 0) {
+            deleteCreature(y, x);
+            if (isElk) {
+                StatisticsLogic.elkDied++;
+                StatisticsLogic.elkDiedByEnergy++;
+                events.update(days, "Лось погиб от недостатка энергии.");
+            }
+            else {
+                StatisticsLogic.predatorDied++;
+                StatisticsLogic.predatorDiedByEnergy++;
+                events.update(days, "Хищник погиб от недостатка энергии.");
+            }
+            return true;
+        }
+        int hunger = MapCoder.decodeCreatureHunger(cellData);
+        if (hunger == 63) {
+            deleteCreature(y, x);
+            if (isElk) {
+                StatisticsLogic.elkDied++;
+                StatisticsLogic.elkDiedByHunger++;
+                events.update(days, "Лось погиб от голода.");
+            }
+            else {
+                StatisticsLogic.predatorDied++;
+                StatisticsLogic.predatorDiedByHunger++;
+                events.update(days, "Хищник погиб от голода.");
+            }
+            return true;
+        }
+        // Чем старше животное, тем больше вероятность, что оно умрет от старости.
+        // Вероятность рассчитывается по формуле probability = 5 * age (в годах) - 25;
+        // Средняя максимальная продолжительность жизни животных в неволе 25 лет.
+        boolean decideToDie = randomBoolean(5 * (MapCoder.decodeCreatureAge(cellData) / 360) - 25);
+        if (decideToDie) {
+            deleteCreature(y, x);
+            if (isElk) {
+                StatisticsLogic.elkDied++;
+                StatisticsLogic.elkDiedByAge++;
+                events.update(days, "Лось погиб от старости.");
+            }
+            else {
+                StatisticsLogic.predatorDied++;
+                StatisticsLogic.predatorDiedByAge++;
+                events.update(days, "Хищник погиб от старости.");
+            }
+            return true;
+        }
+        return false;
     }
 
     // Рождение детёныша. Беременность животного длится 240 дней.
@@ -280,6 +340,11 @@ public class BasicLogic {
                 }
             }
         }
+        return false;
+    }
+
+    private static boolean tryToKill(long cellData, int y, int x) {
+        
         return false;
     }
 
