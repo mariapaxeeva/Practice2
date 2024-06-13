@@ -16,6 +16,7 @@ public class ParametersPanel extends JPanel {
     private static JPanel settings = new JPanel();
     private static JPanel disasterButtons = new JPanel();
 
+    private JSlider elksSlider = CustomSliders.newCustomSlider(0, 100, 50); // Количество лосей
     private JSlider huntersSlider = CustomSliders.newCustomSlider(0, 100, 50); // Количество охотников
     private JSlider limitOfHuntingElkSlider = CustomSliders.newCustomSlider(0, 100, 6); // Лимит добычи лосей
     private JSlider limitOfHuntingPredatorSlider = CustomSliders.newCustomSlider(0, 100, 50); // Лимит добычи хищников
@@ -43,7 +44,7 @@ public class ParametersPanel extends JPanel {
         settings.setBorder(new TitledBorder(new LineBorder(Color.DARK_GRAY),
                 "Настройки", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
                 new Font("serif", Font.ROMAN_BASELINE, 14), Color.DARK_GRAY));
-        settings.setLayout(new GridLayout(8, 1, 0, 10));
+        settings.setLayout(new GridLayout(10, 1, 0, 10));
         this.add(settings);
 
         disasterButtons.setBorder(new CompoundBorder(new TitledBorder (new LineBorder(Color.DARK_GRAY),
@@ -55,6 +56,7 @@ public class ParametersPanel extends JPanel {
 
     // Метод реализует панель настроек с ползунками
     public void settings() {
+        setSlider(elksSlider, "Количество лосей: ");
         setSlider(huntersSlider, "Количество охотников: ");
         setSlider(limitOfHuntingElkSlider, "Лимит добычи лосей: ");
         setSlider(limitOfHuntingPredatorSlider, "Лимит добычи хищников: ");
@@ -117,9 +119,22 @@ public class ParametersPanel extends JPanel {
     // Метод изменения доступа к панели и ее содержимому
     public void setEnabledSettings(boolean b) {
         settings.setEnabled(b);
+        elksSlider.setEnabled(b);
         huntersSlider.setEnabled(b);
         limitOfHuntingElkSlider.setEnabled(b);
         limitOfHuntingPredatorSlider.setEnabled(b);
         predatorsSlider.setEnabled(b);
+    }
+
+    public int getValueElksSlider() {
+        return elksSlider.getValue();
+    }
+
+    public int getValueHuntersSlider() {
+        return huntersSlider.getValue();
+    }
+
+    public int getValuePredatorsSlider() {
+        return predatorsSlider.getValue();
     }
 }
