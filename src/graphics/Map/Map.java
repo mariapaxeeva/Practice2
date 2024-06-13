@@ -16,8 +16,8 @@ import javax.swing.table.DefaultTableModel;
 
 // Класс, реализующий модель карты Алтайского края
 public class Map extends JTable {
-    private final int MAP_SIZE = 65;
-    private final int CELL_SIZE = 10;
+    public static final int MAP_SIZE = 65;
+    public static final int CELL_SIZE = 10;
 
     public Map() {
         view();
@@ -94,6 +94,10 @@ public class Map extends JTable {
         }
     }
 
+    // Возврат карты к начальному состоянию
+    public void reset() {
+        cellsValue();
+    }
 
     // x, y - координаты ячейки
     // u    - последовательность битов
@@ -103,17 +107,17 @@ public class Map extends JTable {
     public int getElkType(int y, int x) {
         return MapCoder.decodeElkType(getDataAt(y, x));
     }
-    public int getElkAge(int y, int x) {
-        return MapCoder.decodeElkAge(getDataAt(y, x));
+    public int getCreatureAge(int y, int x) {
+        return MapCoder.decodeCreatureAge(getDataAt(y, x));
     }
-    public int getElkEnergy(int y, int x) {
-        return MapCoder.decodeElkHunger(getDataAt(y, x));
+    public int getCreatureEnergy(int y, int x) {
+        return MapCoder.decodeCreatureHunger(getDataAt(y, x));
     }
-    public int getElkHunger(int y, int x) {
-        return MapCoder.decodeElkHunger(getDataAt(y, x));
+    public int getCreatureHunger(int y, int x) {
+        return MapCoder.decodeCreatureHunger(getDataAt(y, x));
     }
-    public int getElkPregnancy(int y, int x) {
-        return MapCoder.decodeElkPregnancy(getDataAt(y, x));
+    public int getCreaturePregnancy(int y, int x) {
+        return MapCoder.decodeCreaturePregnancy(getDataAt(y, x));
     }
     public int getPlantType(int y, int x) {
         return MapCoder.decodePlantType(getDataAt(y, x));
@@ -124,8 +128,8 @@ public class Map extends JTable {
     public int getKillerType(int y, int x) {
         return MapCoder.decodeKillerType(getDataAt(y, x));
     }
-    public int getActiveFlagElk(int y, int x) {
-        return MapCoder.decodeActiveFlagElk(getDataAt(y, x));
+    public int getActiveFlagCreature(int y, int x) {
+        return MapCoder.decodeActiveFlagCreature(getDataAt(y, x));
     }
     public int getActiveFlagPlant(int y, int x) {
         return MapCoder.decodeActiveFlagPlant(getDataAt(y, x));
@@ -139,20 +143,20 @@ public class Map extends JTable {
         setDataAt(MapCoder.encodeElkType(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 3)), y, x);
     }
 
-    public void setElkAge(int u, int y, int x) {
-        setDataAt(MapCoder.encodeElkAge(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 16383)), y, x);
+    public void setCreatureAge(int u, int y, int x) {
+        setDataAt(MapCoder.encodeCreatureAge(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 16383)), y, x);
     }
 
-    public void setElkEnergy(int u, int y, int x) {
-        setDataAt(MapCoder.encodeElkEnergy(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 63)), y, x);
+    public void setCreatureEnergy(int u, int y, int x) {
+        setDataAt(MapCoder.encodeCreatureEnergy(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 63)), y, x);
     }
 
-    public void setElkHunger(int u, int y, int x) {
-        setDataAt(MapCoder.encodeElkHunger(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 63)), y, x);
+    public void setCreatureHunger(int u, int y, int x) {
+        setDataAt(MapCoder.encodeCreatureHunger(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 63)), y, x);
     }
 
-    public void setElkPregnancy(int u, int y, int x) {
-        setDataAt(MapCoder.encodeElkPregnancy(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 255)), y, x);
+    public void setCreaturePregnancy(int u, int y, int x) {
+        setDataAt(MapCoder.encodeCreaturePregnancy(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 255)), y, x);
     }
 
     public void setPlantType(int u, int y, int x) {
@@ -167,8 +171,8 @@ public class Map extends JTable {
         setDataAt(MapCoder.encodeKillerType(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 3)), y, x);
     }
 
-    public void setActiveFlagElk(int u, int y, int x) {
-        setDataAt(MapCoder.encodeActiveFlagElk(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 1)), y, x);
+    public void setActiveFlagCreature(int u, int y, int x) {
+        setDataAt(MapCoder.encodeActiveFlagCreature(getDataAt(y, x), logic.Protection.getValueInRange(u, 0, 1)), y, x);
     }
 
     public void setActiveFlagPlant(int u, int y, int x) {
@@ -192,6 +196,10 @@ public class Map extends JTable {
                 int y = columnAtPoint(e.getPoint());
                 MainPanel.creatureInfo.update(x, y);
                 MainPanel.landscapeInfo.update(x, y);
+                if (e.getClickCount() == 2) {
+                    MainPanel.creatureInfo.reset();
+                    MainPanel.landscapeInfo.reset();
+                }
             }
         });
     }
