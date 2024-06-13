@@ -18,7 +18,8 @@ public class Renderer extends DefaultTableCellRenderer {
     private final static int ELK_TYPE_COLOR_MALE                    = 0x010E82;
     private final static int ELK_TYPE_COLOR_FEMALE                  = 0xC75DC2;
     private final static int KILLER_TYPE_COLOR_HUNTER               = 0x233D20;
-    private final static int KILLER_TYPE_COLOR_PREDATOR             = 0xA10A2A;
+    private final static int KILLER_TYPE_COLOR_PREDATOR_MALE        = 0x010E82;
+    private final static int KILLER_TYPE_COLOR_PREDATOR_FEMALE      = 0xC75DC2;
     private final static int PLANT_TYPE_COLOR_FOOD                  = 0x0E5200;
 
     // Метод используется для настройки средства визуализации (JTable)
@@ -111,8 +112,12 @@ public class Renderer extends DefaultTableCellRenderer {
                     color = KILLER_TYPE_COLOR_HUNTER;
                     break;
                 }
-                case MapCoder.KILLER_TYPE_PREDATOR: {
-                    color = KILLER_TYPE_COLOR_PREDATOR;
+                case MapCoder.KILLER_TYPE_PREDATOR_MALE: {
+                    color = KILLER_TYPE_COLOR_PREDATOR_MALE;
+                    break;
+                }
+                case MapCoder.KILLER_TYPE_PREDATOR_FEMALE: {
+                    color = KILLER_TYPE_COLOR_PREDATOR_FEMALE;
                     break;
                 }
                 default: {
@@ -141,7 +146,13 @@ public class Renderer extends DefaultTableCellRenderer {
             cell = 'P';
         }
         if (killerType != MapCoder.KILLER_TYPE_EMPTY) {
-            cell = 'H';
+            if (killerType == MapCoder.KILLER_TYPE_HUNTER) {
+                cell = 'H';
+            }
+            if (killerType == MapCoder.KILLER_TYPE_PREDATOR_MALE
+             || killerType == MapCoder.KILLER_TYPE_PREDATOR_FEMALE) {
+                cell = 'V';
+            }
         }
         return cell;
     }
