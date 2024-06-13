@@ -70,11 +70,16 @@ public class BasicLogic {
     // Метод, побуждающий к выполнению действия животоных, охотников и растений
     private static void perform(long cellData, int y, int x) {
         if (MapCoder.decodeActiveFlagCreature(cellData) == 1 && (MapCoder.decodeElkType(cellData) != MapCoder.ELK_TYPE_EMPTY || MapCoder.decodeKillerType(cellData) != MapCoder.KILLER_TYPE_EMPTY)) {
-            if (tryToEat(cellData, y, x)
-                    || tryToSleep(cellData, y, x)
+            if (tryToSleep(cellData, y, x)
+                    ||tryToEat(cellData, y, x)
                     || tryToMove(cellData, y, x, 0, 0)) {}
         }
+        if (MapCoder.decodeActiveFlagPlant(cellData) == 1 && MapCoder.decodePlantType(cellData) != MapCoder.PLANT_TYPE_EMPTY) {
+            tryToGrowFood(cellData, y, x);
+            tryToSpreadFood(cellData, y, x);
+        }
     }
+
     // Метод реализует процесс утоления голода посредством ..................
     // Чем больше уровень голода, тем больше вероятность, что существо будет есть
     // Вероятность рассчитывается по формуле probability = 2 * hunger - 20;
@@ -219,6 +224,46 @@ public class BasicLogic {
         map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
         map.setActiveFlagCreature(0, y, x);
         return false;
+    }
+
+    // Метод определяет рост съедобных растений в ячейках, где они уже имеются.
+    // За месяц возобновляется до 9% съедобных растений (100% - все растения данной территории).
+    private static void tryToGrowFood(long cellData, int y, int x) {
+        if (days % 30 == 0) {
+            Map map = MainPanel.map;
+            map.setPlantFood(map.getPlantFood(y, x) + randomIntegerInRange(5, 15), y, x);
+        }
+    }
+
+    // Метод определяет распространение съедобных растений на соседние территории.
+    // С вероятностью 0,5% наступают благоприятные условия для разрастания,
+    // и если рядом имеется пустая ячейка, то она заполняется растением.
+    // Если в ячейке съедобных растений не осталось, то удаляем растение с карты.
+    private static void tryToSpreadFood(long cellData, int y, int x) {
+        Map map = MainPanel.map;
+        if (map.getPlantFood(y, x) == 0) {
+            map.setPlantType(MapCoder.PLANT_TYPE_EMPTY, y, x);
+            return;
+        }
+        // 1% && 50% = 0.01 * 0.50 = 0.005 = 0.5%
+        boolean decideToSpread = randomBoolean(1) && randomBoolean(50);
+        if (decideToSpread) {
+            int yTarget = y + randomIntegerInRange(-2, 2);
+            int xTarget = x + randomIntegerInRange(-2, 2);
+            if (isCellInMapRange(yTarget, xTarget) && (yTarget != y || xTarget != x)) {
+                int landscapeTarget = map.getLandscapeType(yTarget, xTarget);
+                int elkTarget = map.getElkType(yTarget, xTarget);
+                int killerTarget = map.getKillerType(yTarget, xTarget);
+                int plantTarget = map.getPlantType(yTarget, xTarget);
+                if (landscapeTarget != MapCoder.LANDSCAPE_TYPE_WATER
+                        && landscapeTarget != MapCoder.LANDSCAPE_TYPE_OUTSIDE
+                        && elkTarget == MapCoder.ELK_TYPE_EMPTY
+                        && killerTarget == MapCoder.KILLER_TYPE_EMPTY
+                        && plantTarget == MapCoder.PLANT_TYPE_EMPTY) {
+                    map.setPlantType(MapCoder.PLANT_TYPE_PLANT, yTarget, xTarget);
+                }
+            }
+        }
     }
 
     // Метод копирует данные из ячейки (x,y) в (xTarget, yTarget) и очищает ячейку (x,y)
