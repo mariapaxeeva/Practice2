@@ -1,5 +1,6 @@
 package logic;
 
+import graphics.InfoPanels.Events;
 import graphics.MainPanel;
 import graphics.Map.Map;
 import graphics.Map.MapCoder;
@@ -70,14 +71,85 @@ public class BasicLogic {
     // Метод, побуждающий к выполнению действия животоных, охотников и растений
     private static void perform(long cellData, int y, int x) {
         if (MapCoder.decodeActiveFlagCreature(cellData) == 1 && (MapCoder.decodeElkType(cellData) != MapCoder.ELK_TYPE_EMPTY || MapCoder.decodeKillerType(cellData) != MapCoder.KILLER_TYPE_EMPTY)) {
-            if (tryToSleep(cellData, y, x)
-                    ||tryToEat(cellData, y, x)
+            if (tryToGiveBirth(cellData, y, x)
+                    || tryToEat(cellData, y, x)
+                    || tryToSleep(cellData, y, x)
+                    || tryToGetPregnant(cellData, y, x)
                     || tryToMove(cellData, y, x, 0, 0)) {}
         }
         if (MapCoder.decodeActiveFlagPlant(cellData) == 1 && MapCoder.decodePlantType(cellData) != MapCoder.PLANT_TYPE_EMPTY) {
             tryToGrowFood(cellData, y, x);
             tryToSpreadFood(cellData, y, x);
         }
+    }
+
+    // Рождение детёныша. Беременность животного длится 240 дней.
+    // Детеныш умирает, если нет свободной ячейки рядом с матерью.
+    private static boolean tryToGiveBirth(long cellData, int y, int x) {
+        Map map = MainPanel.map;
+        int pregnancy = map.getCreaturePregnancy(y, x);
+        if (pregnancy != 0 && pregnancy < 240) {
+            map.setCreaturePregnancy(map.getCreaturePregnancy(y, x) + 1, y, x);
+        }
+        else if (pregnancy == 240) {
+            map.setCreaturePregnancy(0, y, x);
+            map.setCreatureEnergy(map.getCreatureEnergy(y, x) - 4, y, x);
+            map.setCreatureHunger(map.getCreatureHunger(y, x) + 4, y, x);
+            map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
+            map.setActiveFlagCreature(0, y, x);
+            for (int yStep = -1; yStep < 2; yStep++) {
+                for (int xStep = -1; xStep < 2; xStep++) {
+                    int yTarget = y + yStep;
+                    int xTarget = x + xStep;
+                    if (isCellInMapRange(yTarget, xTarget) && map.getElkType(yTarget, xTarget) == MapCoder.ELK_TYPE_EMPTY && map.getKillerType(yTarget, xTarget) == MapCoder.KILLER_TYPE_EMPTY) {
+                        map.setCreatureAge(1, yTarget, xTarget);
+                        map.setCreatureEnergy(63, yTarget, xTarget);
+                        map.setCreatureHunger(0, yTarget, xTarget);
+                        map.setCreaturePregnancy(0, yTarget, xTarget);
+                        map.setActiveFlagCreature(0, yTarget, xTarget);
+                        if (map.getElkType(y, x) != MapCoder.ELK_TYPE_EMPTY) {
+                            map.setElkType(random.nextBoolean() ? MapCoder.ELK_TYPE_MALE : MapCoder.ELK_TYPE_FEMALE, yTarget, xTarget);
+                            StatisticsLogic.babyElkWereBorn++;
+                            MainPanel.events.update(days, "Родился детёныш лося.");
+                        }
+                        else {
+                            map.setKillerType(random.nextBoolean() ? MapCoder.KILLER_TYPE_PREDATOR_MALE : MapCoder.KILLER_TYPE_PREDATOR_FEMALE, yTarget, xTarget);
+                            StatisticsLogic.babyPredatorWereBorn++;
+                            MainPanel.events.update(days, "Родился детёныш хищника.");
+                        }
+                        return true;
+                    }
+                }
+            }
+            map.setCreaturePregnancy(0, y, x);
+            if (map.getElkType(y, x) != MapCoder.ELK_TYPE_EMPTY) {
+                StatisticsLogic.babyElkDied++;
+                MainPanel.events.update(days, "Детеныш лося погиб.");
+            }
+            else {
+                StatisticsLogic.babyPredatorDied++;
+                MainPanel.events.update(days, "Детеныш хищника погиб.");
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // Метод реализует сон существ, при котором происходит пополнение энергии
+    // Энергия кодируется 6 битами, то есть максимальное значение 63,
+    // Чем меньше энергия, тем больше вероятность, что существо будет спать
+    // Вероятность рассчитывается по формуле probability = 120 - 2 * energy;
+    private static boolean tryToSleep(long cellData, int y, int x) {
+        boolean decideToSleep = randomBoolean(120 - 2 * MapCoder.decodeCreatureEnergy(cellData));
+        if (decideToSleep) {
+            Map map = MainPanel.map;
+            map.setCreatureEnergy(63, y, x);
+            map.setCreatureHunger(map.getCreatureHunger(y, x) + 1, y, x);
+            map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
+            map.setActiveFlagCreature(0, y, x);
+            return true;
+        }
+        return false;
     }
 
     // Метод реализует процесс утоления голода посредством ..................
@@ -165,19 +237,48 @@ public class BasicLogic {
         return false;
     }
 
-    // Метод реализует сон существ, при котором происходит пополнение энергии
-    // Энергия кодируется 6 битами, то есть максимальное значение 63,
-    // Чем меньше энергия, тем больше вероятность, что существо будет спать
-    // Вероятность рассчитывается по формуле probability = 120 - 2 * energy;
-    private static boolean tryToSleep(long cellData, int y, int x) {
-        boolean decideToSleep = randomBoolean(120 - 2 * MapCoder.decodeCreatureEnergy(cellData));
-        if (decideToSleep) {
-            Map map = MainPanel.map;
-            map.setCreatureEnergy(63, y, x);
-            map.setCreatureHunger(map.getCreatureHunger(y, x) + 1, y, x);
-            map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
-            map.setActiveFlagCreature(0, y, x);
-            return true;
+    // Метод, отвечающий за беременность существ.
+    // Лоси могут забеременеть в возрасте старше 2х лет (720 дней)
+    // в сентябре и октябре (прошло 8 или 9 месяцев).
+    // Хищники беременеют в возрасте от 4х лет (1440 дней) в июне и июле.
+    private static boolean tryToGetPregnant(long cellData, int y, int x) {
+        Map map = MainPanel.map;
+        int month = days / 30 % 12;
+        if (map.getCreaturePregnancy(y, x) == 0
+                && ((map.getElkType(y, x) == MapCoder.ELK_TYPE_FEMALE
+                && map.getCreatureAge(y, x) > 719
+                && map.getCreaturePregnancy(y, x) == 0
+                && (month == 8 || month == 9))
+                || (map.getKillerType(y, x) == MapCoder.KILLER_TYPE_PREDATOR_FEMALE
+                && map.getCreatureAge(y, x) > 1439
+                && (month == 5 || month == 6)))) {
+            for (int yStep = -1; yStep < 2; yStep++) {
+                for (int xStep = -1; xStep < 2; xStep++) {
+                    int yTarget = y + yStep;
+                    int xTarget = x + xStep;
+                    if (isCellInMapRange(yTarget, xTarget)
+                            && map.getActiveFlagCreature(yTarget, xTarget) == 1
+                            && (map.getElkType(y, x) == MapCoder.ELK_TYPE_FEMALE && map.getElkType(yTarget, xTarget) == MapCoder.ELK_TYPE_MALE
+                            || map.getKillerType(y, x) == MapCoder.KILLER_TYPE_PREDATOR_FEMALE && map.getKillerType(yTarget, xTarget) == MapCoder.KILLER_TYPE_PREDATOR_MALE)) {
+                        boolean decideToGetPregnant = randomBoolean(30);
+                        if (decideToGetPregnant) {
+                            map.setCreaturePregnancy(1, y, x);
+                            map.setCreatureEnergy(map.getCreatureEnergy(y, x) - 4, y, x);
+                            map.setCreatureHunger(map.getCreatureHunger(y, x) + 4, y, x);
+                            map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
+                            map.setActiveFlagCreature(0, y, x);
+                            map.setCreatureEnergy(map.getCreatureEnergy(yTarget, xTarget) - 4, yTarget, xTarget);
+                            map.setCreatureHunger(map.getCreatureHunger(yTarget, xTarget) + 4, yTarget, xTarget);
+                            map.setCreatureAge(map.getCreatureAge(yTarget, xTarget) + 1, yTarget, xTarget);
+                            map.setActiveFlagCreature(0, yTarget, xTarget);
+                            if (map.getElkType(y, x) != MapCoder.ELK_TYPE_EMPTY) {
+                                MainPanel.events.update(days, "Лосиха забеременела."); }
+                            else {MainPanel.events.update(days, "Хищница забеременела."); }
+                            return true;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
