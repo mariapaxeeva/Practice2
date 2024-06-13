@@ -1,6 +1,5 @@
 package logic;
 
-import graphics.InfoPanels.Events;
 import graphics.MainPanel;
 import graphics.Map.Map;
 import graphics.Map.MapCoder;
@@ -13,7 +12,7 @@ import java.util.Random;
 public class BasicLogic {
     private static int days = 1;        // Количество пройденных с начала симуляции дней
     private static Timer timer;
-    private static int timerDelay = 1000;
+    private static int timerDelay = 100;
     private static Random random = new Random();
 
     // Метод, запускающий/возобновляющий работу модели
@@ -71,8 +70,111 @@ public class BasicLogic {
     // Метод, побуждающий к выполнению действия животоных, охотников и растений
     private static void perform(long cellData, int y, int x) {
         if (MapCoder.decodeActiveFlagCreature(cellData) == 1 && (MapCoder.decodeElkType(cellData) != MapCoder.ELK_TYPE_EMPTY || MapCoder.decodeKillerType(cellData) != MapCoder.KILLER_TYPE_EMPTY)) {
-            if (tryToMove(cellData, y, x, 0, 0)) {}
+            if (tryToEat(cellData, y, x)
+                    || tryToSleep(cellData, y, x)
+                    || tryToMove(cellData, y, x, 0, 0)) {}
         }
+    }
+    // Метод реализует процесс утоления голода посредством ..................
+    // Чем больше уровень голода, тем больше вероятность, что существо будет есть
+    // Вероятность рассчитывается по формуле probability = 2 * hunger - 20;
+    private static boolean tryToEat(long cellData, int y, int x) {
+        Map map = MainPanel.map;
+        boolean decideToEat = randomBoolean(2 * MapCoder.decodeCreatureHunger(cellData) - 20);
+        if (decideToEat) {
+            // Если принято решение поесть и еда находится в ближайшем доступном диапазоне, то есть
+            for (int yStep = -1; yStep < 2; yStep++) {
+                for (int xStep = -1; xStep < 2; xStep++) {
+                    int yTarget = y + yStep;
+                    int xTarget = x + xStep;
+                    if (isCellInMapRange(yTarget, xTarget)) {
+                        if (map.getKillerType(y, x) == MapCoder.KILLER_TYPE_PREDATOR_MALE || map.getKillerType(y, x) == MapCoder.KILLER_TYPE_PREDATOR_FEMALE) {
+                            int foodTarget = map.getElkType(yTarget, xTarget);
+                            if (foodTarget != MapCoder.ELK_TYPE_EMPTY) {
+                                deleteCreature(yTarget, xTarget);
+                                MainPanel.events.update(days, "Лось съеден хищником.");
+                                map.setCreatureHunger(map.getCreatureHunger(y, x) - 63, y, x);
+                                map.setCreatureEnergy(map.getCreatureEnergy(y, x) - 1, y, x);
+                                map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
+                                map.setActiveFlagCreature(0, y, x);
+                                return true;
+                            }
+                        } else if (map.getElkType(y, x) != MapCoder.ELK_TYPE_EMPTY) {
+                            int foodTarget = map.getPlantFood(yTarget, xTarget);
+                            if (foodTarget != 0) {
+                                if (map.getCreatureAge(y, x) < 720) {
+                                    map.setPlantFood(--foodTarget, yTarget, xTarget);
+                                } else {
+                                    map.setPlantFood(--foodTarget, yTarget, xTarget);
+                                }
+                                map.setCreatureHunger(map.getCreatureHunger(y, x) - 32, y, x);
+                                map.setCreatureEnergy(map.getCreatureEnergy(y, x) - 1, y, x);
+                                map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
+                                map.setActiveFlagCreature(0, y, x);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            // Если рядом нет еды, то искать ближайшую ячейку со съедобными растениями
+            // По гипотенузе прямоугольного треугольника с катетами xDistance и yDistance,
+            // где xDistance и yDistance - расстояния от текущей ячейки до целевой по осям x и y.
+            int minTarget = Map.MAP_SIZE * Map.MAP_SIZE + Map.MAP_SIZE * Map.MAP_SIZE;
+            int yTarget = y;
+            int xTarget = x;
+            for (int yTemp = 0; yTemp < Map.MAP_SIZE; yTemp++) {
+                for (int xTemp = 0; xTemp < Map.MAP_SIZE; xTemp++) {
+                    if ((map.getPlantFood(yTemp, xTemp) != 0 && map.getElkType(y, x) != MapCoder.ELK_TYPE_EMPTY)
+                    || (map.getElkType(yTemp, xTemp) != 0 && (map.getKillerType(y, x) == MapCoder.KILLER_TYPE_PREDATOR_MALE || map.getKillerType(y, x) == MapCoder.KILLER_TYPE_PREDATOR_FEMALE))) {
+                        int yDistance = Math.abs(yTemp - y);
+                        int xDistance = Math.abs(xTemp - x);
+                        int minTemp = yDistance * yDistance + xDistance * xDistance;
+                        if (minTemp < minTarget) {
+                            minTarget = minTemp;
+                            yTarget = yTemp;
+                            xTarget = xTemp;
+                        }
+                    }
+                }
+            }
+            // Пока животное не дойдет до ячейки с едой, оно направляется к цели по кратчайшему пути
+            if (yTarget != y || xTarget != x) {
+                int yStep = 0; // шаг, который нужно сделать
+                int xStep = 0;
+                int yDistance = yTarget - y; // расстояние до целевой ячейки
+                int xDistance = xTarget - x;
+                if (yDistance < 0) {
+                    yStep = -1;
+                } else if (yDistance > 0) {
+                    yStep = 1;
+                }
+                if (xDistance < 0) {
+                    xStep = -1;
+                } else if (xDistance > 0) {
+                    xStep = 1;
+                }
+                return tryToMove(cellData, y, x, yStep, xStep);
+            }
+        }
+        return false;
+    }
+
+    // Метод реализует сон существ, при котором происходит пополнение энергии
+    // Энергия кодируется 6 битами, то есть максимальное значение 63,
+    // Чем меньше энергия, тем больше вероятность, что существо будет спать
+    // Вероятность рассчитывается по формуле probability = 120 - 2 * energy;
+    private static boolean tryToSleep(long cellData, int y, int x) {
+        boolean decideToSleep = randomBoolean(120 - 2 * MapCoder.decodeCreatureEnergy(cellData));
+        if (decideToSleep) {
+            Map map = MainPanel.map;
+            map.setCreatureEnergy(63, y, x);
+            map.setCreatureHunger(map.getCreatureHunger(y, x) + 1, y, x);
+            map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
+            map.setActiveFlagCreature(0, y, x);
+            return true;
+        }
+        return false;
     }
 
     // Передвижение существ
@@ -113,7 +215,7 @@ public class BasicLogic {
             }
         }
         map.setCreatureEnergy(map.getCreatureEnergy(y, x) - 1, y, x);
-        map.setCreatureHunger(map.getCreatureHunger(y, x) - 1, y, x);
+        map.setCreatureHunger(map.getCreatureHunger(y, x) + 1, y, x);
         map.setCreatureAge(map.getCreatureAge(y, x) + 1, y, x);
         map.setActiveFlagCreature(0, y, x);
         return false;
@@ -145,6 +247,12 @@ public class BasicLogic {
     // Метод для проверки, находится ли ячейка (x, y) в пределах карты
     private static boolean isCellInMapRange(int y, int x) {
         return y >= 0 && y < Map.MAP_SIZE && x >= 0 && x < Map.MAP_SIZE;
+    }
+
+    // Метод генерирует true с вероятностью probability
+    public static boolean randomBoolean(int probability) {
+        probability = Protection.getValueInRange(probability, 0, 100);
+        return (random.nextInt(100) < probability);
     }
 
     // Метод генерирует случайное целое число в диапазоне [min, max]
