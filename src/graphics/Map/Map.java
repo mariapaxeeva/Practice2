@@ -110,9 +110,7 @@ public class Map extends JTable {
     public int getCreatureAge(int y, int x) {
         return MapCoder.decodeCreatureAge(getDataAt(y, x));
     }
-    public int getCreatureEnergy(int y, int x) {
-        return MapCoder.decodeCreatureHunger(getDataAt(y, x));
-    }
+    public int getCreatureEnergy(int y, int x) { return MapCoder.decodeCreatureEnergy(getDataAt(y, x)); }
     public int getCreatureHunger(int y, int x) {
         return MapCoder.decodeCreatureHunger(getDataAt(y, x));
     }
@@ -122,9 +120,7 @@ public class Map extends JTable {
     public int getPlantType(int y, int x) {
         return MapCoder.decodePlantType(getDataAt(y, x));
     }
-    public int getPlantFood(int y, int x) {
-        return MapCoder.decodePlantFood(getDataAt(y, x));
-    }
+    public int getPlantFood(int y, int x) { return MapCoder.decodePlantFood(getDataAt(y, x)); }
     public int getKillerType(int y, int x) {
         return MapCoder.decodeKillerType(getDataAt(y, x));
     }
