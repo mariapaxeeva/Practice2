@@ -20,11 +20,11 @@ public class Events extends JScrollPane {
                 "История событий", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
                 new Font("serif", Font.ROMAN_BASELINE, 14), Color.DARK_GRAY));
         setPreferredSize(new Dimension(0, 0));
-        setFont(new Font("Arial Narrow", Font.ROMAN_BASELINE, 13));
     }
 
     // Настройка свойств списка событий и его отображение на панели
     private void events() {
+        events.setFont(new Font("Arial Narrow", Font.ROMAN_BASELINE, 13));
         this.events.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Режим выделения - 1 объект
         this.events.setLayoutOrientation(JList.VERTICAL);
         this.events.setBackground(new Color(0xEEEEEE));

@@ -26,7 +26,7 @@ public class CreatureInfo extends JPanel {
         setBorder(new TitledBorder(new LineBorder(Color.DARK_GRAY),
                 "Сведения о существе", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
                 new Font("serif", Font.ROMAN_BASELINE, 14), Color.DARK_GRAY));
-        setPreferredSize(new Dimension(450, 0));
+        setPreferredSize(new Dimension(450, 30));
     }
 
     // Отображение информации на панели
@@ -39,29 +39,27 @@ public class CreatureInfo extends JPanel {
     // Обновление отображаемой информации (x, y - координаты ячейки)
     public void update(int y, int x) {
         long cellData = MainPanel.map.getDataAt(y, x);
-        int isKiller = MapCoder.decodeKillerType(cellData);
+        int killerType = MapCoder.decodeKillerType(cellData);
         int elkType  = MapCoder.decodeElkType(cellData);
 
-        if (isKiller == MapCoder.KILLER_TYPE_HUNTER){
+        if (killerType == MapCoder.KILLER_TYPE_HUNTER){
             info = ("Тип существа: Охотник");
         }
-        else if (isKiller == MapCoder.KILLER_TYPE_PREDATOR) {
-            info = ("Тип существа: Хищник");
-        }
-        else if (isKiller == MapCoder.KILLER_TYPE_EMPTY && elkType != MapCoder.ELK_TYPE_EMPTY) {
-            info = String.format("<html> Тип существа: Лось"
+        else if (killerType != MapCoder.KILLER_TYPE_EMPTY || elkType != MapCoder.ELK_TYPE_EMPTY) {
+            info = String.format("<html> Тип существа: %s"
                             + "<br> Пол: %s"
                             + "<br> Возраст: %s"
                             + "<br> Энергия: %s"
                             + "<br> Голод: %s",
-                    formatElkType(elkType),
-                    formatDate(MapCoder.decodeElkAge(cellData)),
-                    formatPercents(MapCoder.decodeElkEnergy(cellData)),
-                    formatPercents(MapCoder.decodeElkHunger(cellData)));
-            if (MapCoder.decodeElkPregnancy(cellData) > 0) {
-                info += String.format("<br> Беременность: %s", formatDate(MapCoder.decodeElkPregnancy(cellData)));
+                    formatCreatureType(elkType, killerType),
+                    formatGender(elkType, killerType),
+                    formatDate(MapCoder.decodeCreatureAge(cellData)),
+                    formatPercents(MapCoder.decodeCreatureEnergy(cellData)),
+                    formatPercents(MapCoder.decodeCreatureHunger(cellData)));
+            if (MapCoder.decodeCreaturePregnancy(cellData) > 0) {
+                info += String.format("<br> Беременность: %s", formatDate(MapCoder.decodeCreaturePregnancy(cellData)));
             }
-        } else if (isKiller == MapCoder.KILLER_TYPE_EMPTY && elkType == MapCoder.ELK_TYPE_EMPTY) {
+        } else if (killerType == MapCoder.KILLER_TYPE_EMPTY && elkType == MapCoder.ELK_TYPE_EMPTY) {
             info = "На этой территории никого нет";
         }
         this.text.setText(info);
@@ -74,11 +72,19 @@ public class CreatureInfo extends JPanel {
         return String.format("%s лет %s месяцев %s дней", years, months % 12, days % 30);
     }
 
-    // Форматирование вывода сведений о поле лося
-    public static String formatElkType(int type) {
+    // Форматирование вывода сведений о типе существа
+    public static String formatCreatureType(int elkType, int killerType) {
+        String creatureType = "-";
+        if (elkType == MapCoder.ELK_TYPE_MALE || elkType == MapCoder.ELK_TYPE_FEMALE) { creatureType = "Лось"; }
+        else if (killerType == MapCoder.KILLER_TYPE_PREDATOR_MALE || killerType == MapCoder.KILLER_TYPE_PREDATOR_FEMALE) { creatureType = "Хищник"; }
+        return creatureType;
+    }
+
+    // Форматирование вывода сведений о поле существа
+    public static String formatGender(int elkType, int killerType) {
         String gender = "-";
-        if (type == MapCoder.ELK_TYPE_MALE) { gender = "Мужской"; }
-        else if (type == MapCoder.ELK_TYPE_FEMALE) { gender = "Женский"; }
+        if (elkType == MapCoder.ELK_TYPE_MALE || killerType == MapCoder.KILLER_TYPE_PREDATOR_MALE) { gender = "Мужской"; }
+        else if (elkType == MapCoder.ELK_TYPE_FEMALE || killerType == MapCoder.KILLER_TYPE_PREDATOR_FEMALE) { gender = "Женский"; }
         return gender;
     }
 

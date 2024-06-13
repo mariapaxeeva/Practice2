@@ -21,6 +21,7 @@ public class MainWindow extends JFrame {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
 
+        // Создание меню и его добавление в окно
         private void menuBar() {
             JMenuBar menu = new JMenuBar();
             menu.setLayout(new FlowLayout(FlowLayout.LEFT));

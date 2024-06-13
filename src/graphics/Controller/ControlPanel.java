@@ -1,6 +1,5 @@
 package graphics.Controller;
 
-import graphics.ParametersPanel.ParametersPanel;
 import logic.BasicLogic;
 
 import javax.swing.*;
@@ -39,11 +38,13 @@ public class ControlPanel extends JPanel{
                     pauseButton.setIcon(new ImageIcon("src\\resources\\pauseButton.png"));
                     pauseButton.setEnabled(false);
                     parameters.setEnabledSettings(true);
+                    BasicLogic.stop();
                 } else {
                     BasicLogic.start();
                     onButton.setIcon(new ImageIcon("src\\resources\\onButton.png"));
                     pauseButton.setEnabled(true);
                     parameters.setEnabledSettings(false);
+                    BasicLogic.start();
                 }
                 isOff = !isOff;
             }
@@ -58,8 +59,10 @@ public class ControlPanel extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 if (isSuspended) {
                         pauseButton.setIcon(new ImageIcon("src\\resources\\continueButton.png"));
+                        BasicLogic.pause();
                     } else {
                         pauseButton.setIcon(new ImageIcon("src\\resources\\pauseButton.png"));
+                        BasicLogic.start();
                 }
                     isSuspended = !isSuspended;
             }
