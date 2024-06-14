@@ -55,6 +55,6 @@ public class Events extends JScrollPane {
     private String formatDateShort(int days) {
         int months = days / 30;
         int years = months / 12;
-        return String.format("%02d.%02d.%04d", days % 30, months % 12, years);
+        return String.format("%02d.%02d.%04d", days % 30 + 1, months % 12 + 1, years + 1); // +1, так как день, месяц и год начинаются с 1, а не с 0
     }
 }
