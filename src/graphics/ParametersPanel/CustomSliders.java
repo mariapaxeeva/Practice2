@@ -128,7 +128,7 @@ public class CustomSliders extends BasicSliderUI {
             };
             customSlider.setForeground(new Color(0xBA8416));
             customSlider.setFont(font);
-            customSlider.setMajorTickSpacing(10);
+            customSlider.setMajorTickSpacing(20);
             customSlider.setMinorTickSpacing(5);
             customSlider.setPaintLabels(true);
             customSlider.setPaintTicks(true);

@@ -15,14 +15,18 @@ public class ParametersSetter {
     private static final int MAX_Y = 57;
     private static Random random = new Random();
 
-    private int numberOfElks;
-    private int numberOfHunters;
-    private int numberOfPredators;
+    private final int numberOfElks;
+    private final int numberOfHunters;
+    private final int numberOfPredators;
+    private final int limitOfHuntingElk;
+    private final int limitOfHuntingPredator;
 
     ParametersSetter() {
         numberOfElks = MainPanel.parameters.getValueElksSlider();
         numberOfHunters = MainPanel.parameters.getValueHuntersSlider();
         numberOfPredators = MainPanel.parameters.getValuePredatorsSlider();
+        limitOfHuntingElk = MainPanel.parameters.getValueLimitOfElkSlider();
+        limitOfHuntingPredator = MainPanel.parameters.getValueLimitOfPredatorsSlider();
     }
 
     public void setParameters() {
@@ -35,6 +39,7 @@ public class ParametersSetter {
 
     public void setNumberOfElks() {
         Map map = MainPanel.map;
+        StatisticsLogic.elk = numberOfElks;
         int countOfElks = numberOfElks;
         int randomX = 0, randomY = 0;
         while (countOfElks > 0) {
@@ -45,9 +50,9 @@ public class ParametersSetter {
                     && map.getPlantType(randomY, randomX) == MapCoder.PLANT_TYPE_EMPTY
                     && map.getLandscapeType(randomY, randomX) != MapCoder.LANDSCAPE_TYPE_OUTSIDE
                     && map.getLandscapeType(randomY, randomX) != MapCoder.LANDSCAPE_TYPE_WATER) {
-                if (random.nextBoolean()) { map.setElkType(MapCoder.ELK_TYPE_MALE, randomY, randomX); }
-                else { map.setElkType(MapCoder.ELK_TYPE_FEMALE, randomY, randomX); }
+                map.setElkType(random.nextBoolean() ? MapCoder.ELK_TYPE_MALE : MapCoder.ELK_TYPE_FEMALE, randomY, randomX);
                 map.setCreatureEnergy(63, randomY, randomX);
+                map.setCreatureAge(BasicLogic.randomIntegerInRange(1, 1620), randomY, randomX);
                 countOfElks--;
             }
         }
@@ -55,6 +60,7 @@ public class ParametersSetter {
 
     public void setNumberOfHunters() {
         Map map = MainPanel.map;
+        StatisticsLogic.hunter = numberOfHunters;
         int countOfHunters = numberOfHunters;
         int randomX = 0, randomY = 0;
         while (countOfHunters > 0) {
@@ -71,16 +77,19 @@ public class ParametersSetter {
         }
     }
 
-    public void setLimitOfHuntingElk() {
-
+    public int setLimitOfHuntingElk() {
+        int numberOfElk = StatisticsLogic.elk;
+        return numberOfElk * limitOfHuntingElk / 100;
     }
 
-    public void setLimitOfHuntingPredator() {
-
+    public int setLimitOfHuntingPredator() {
+        int numberOfPredator = StatisticsLogic.predator;
+        return numberOfPredator * limitOfHuntingPredator / 100;
     }
 
     public void setNumberOfPredators() {
         Map map = MainPanel.map;
+        StatisticsLogic.predator = numberOfPredators;
         int countOfPredators = numberOfPredators;
         int randomX = 0, randomY = 0;
         while (countOfPredators > 0) {
@@ -91,9 +100,9 @@ public class ParametersSetter {
                     && map.getPlantType(randomY, randomX) == MapCoder.PLANT_TYPE_EMPTY
                     && map.getLandscapeType(randomY, randomX) != MapCoder.LANDSCAPE_TYPE_OUTSIDE
                     && map.getLandscapeType(randomY, randomX) != MapCoder.LANDSCAPE_TYPE_WATER) {
-                if (random.nextBoolean()) { map.setKillerType(MapCoder.KILLER_TYPE_PREDATOR_MALE, randomY, randomX); }
-                else { map.setKillerType(MapCoder.KILLER_TYPE_PREDATOR_FEMALE, randomY, randomX); }
+                map.setKillerType(random.nextBoolean() ? MapCoder.KILLER_TYPE_PREDATOR_MALE : MapCoder.KILLER_TYPE_PREDATOR_FEMALE, randomY, randomX);
                 map.setCreatureEnergy(63, randomY, randomX);
+                map.setCreatureAge(BasicLogic.randomIntegerInRange(1, 1620), randomY, randomX);
                 countOfPredators--;
             }
         }

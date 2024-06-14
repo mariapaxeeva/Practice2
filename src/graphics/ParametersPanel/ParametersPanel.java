@@ -16,11 +16,11 @@ public class ParametersPanel extends JPanel {
     private static JPanel settings = new JPanel();
     private static JPanel disasterButtons = new JPanel();
 
-    private JSlider elksSlider = CustomSliders.newCustomSlider(0, 100, 50); // Количество лосей
-    private JSlider huntersSlider = CustomSliders.newCustomSlider(0, 100, 50); // Количество охотников
-    private JSlider limitOfHuntingElkSlider = CustomSliders.newCustomSlider(0, 100, 6); // Лимит добычи лосей
-    private JSlider limitOfHuntingPredatorSlider = CustomSliders.newCustomSlider(0, 100, 50); // Лимит добычи хищников
-    private JSlider predatorsSlider = CustomSliders.newCustomSlider(0, 100, 50); // Количество хищников
+    private JSlider elksSlider = CustomSliders.newCustomSlider(0, 200, 200); // Количество лосей
+    private JSlider huntersSlider = CustomSliders.newCustomSlider(0, 100, 30); // Количество охотников
+    private JSlider limitOfHuntingElkSlider = CustomSliders.newCustomSlider(0, 100, 2); // Лимит добычи лосей
+    private JSlider limitOfHuntingPredatorSlider = CustomSliders.newCustomSlider(0, 100, 10); // Лимит добычи хищников
+    private JSlider predatorsSlider = CustomSliders.newCustomSlider(0, 100, 57); // Количество хищников
 
     public ParametersPanel() {
         view();
@@ -58,8 +58,8 @@ public class ParametersPanel extends JPanel {
     public void settings() {
         setSlider(elksSlider, "Количество лосей: ");
         setSlider(huntersSlider, "Количество охотников: ");
-        setSlider(limitOfHuntingElkSlider, "Лимит добычи лосей: ");
-        setSlider(limitOfHuntingPredatorSlider, "Лимит добычи хищников: ");
+        setSlider(limitOfHuntingElkSlider, "Лимит добычи лосей (в %): ");
+        setSlider(limitOfHuntingPredatorSlider, "Лимит добычи хищников (в %): ");
         setSlider(predatorsSlider, "Количество хищников: ");
     }
 
@@ -95,7 +95,7 @@ public class ParametersPanel extends JPanel {
         JLabel label = new JLabel();
         label.setFont(new Font("serif", Font.ROMAN_BASELINE, 14));
         label.setBorder(BorderFactory.createEmptyBorder(0, 13, 0, 0));
-        label.setText(text + slider.getValue() + "%");
+        label.setText(text + slider.getValue());
         slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 int value = ((JSlider)e.getSource()).getValue();
@@ -136,5 +136,13 @@ public class ParametersPanel extends JPanel {
 
     public int getValuePredatorsSlider() {
         return predatorsSlider.getValue();
+    }
+
+    public int getValueLimitOfElkSlider() {
+        return limitOfHuntingElkSlider.getValue();
+    }
+
+    public int getValueLimitOfPredatorsSlider() {
+        return limitOfHuntingPredatorSlider.getValue();
     }
 }
