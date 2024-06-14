@@ -94,18 +94,6 @@ public class Renderer extends DefaultTableCellRenderer {
                 }
             }
         }
-        else if (plantType != MapCoder.PLANT_TYPE_EMPTY) {
-            switch (plantType) {
-                case MapCoder.PLANT_TYPE_PLANT: {
-                    color = PLANT_TYPE_COLOR_FOOD;
-                    break;
-                }
-                default: {
-                    color = COLOR_UNDEFINED;
-                    break;
-                }
-            }
-        }
         else if (killerType != MapCoder.KILLER_TYPE_EMPTY) {
             switch (killerType) {
                 case MapCoder.KILLER_TYPE_HUNTER: {
@@ -118,6 +106,18 @@ public class Renderer extends DefaultTableCellRenderer {
                 }
                 case MapCoder.KILLER_TYPE_PREDATOR_FEMALE: {
                     color = KILLER_TYPE_COLOR_PREDATOR_FEMALE;
+                    break;
+                }
+                default: {
+                    color = COLOR_UNDEFINED;
+                    break;
+                }
+            }
+        }
+        else if (plantType != MapCoder.PLANT_TYPE_EMPTY) {
+            switch (plantType) {
+                case MapCoder.PLANT_TYPE_PLANT: {
+                    color = PLANT_TYPE_COLOR_FOOD;
                     break;
                 }
                 default: {
