@@ -97,7 +97,7 @@ public class Statistics extends JScrollPane {
                     StatisticsLogic.predatorDiedByEnergy,
                     StatisticsLogic.predatorDiedByHunger,
                     StatisticsLogic.predatorDiedByHunter,
-                    StatisticsLogic.elkDiedByFire,
+                    StatisticsLogic.predatorDiedByFire,
 
                     StatisticsLogic.elkMigrated + StatisticsLogic.predatorMigrated,
                     StatisticsLogic.elkMigrated,

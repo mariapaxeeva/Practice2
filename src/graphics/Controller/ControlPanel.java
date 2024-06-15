@@ -38,12 +38,14 @@ public class ControlPanel extends JPanel{
                     pauseButton.setIcon(new ImageIcon("src\\resources\\pauseButton.png"));
                     pauseButton.setEnabled(false);
                     parameters.setEnabledSettings(true);
+                    parameters.setEnabledDisasterButtons(false);
                     BasicLogic.stop();
                 } else {
                     BasicLogic.start();
                     onButton.setIcon(new ImageIcon("src\\resources\\onButton.png"));
                     pauseButton.setEnabled(true);
                     parameters.setEnabledSettings(false);
+                    parameters.setEnabledDisasterButtons(true);
                     BasicLogic.start();
                 }
                 isOff = !isOff;

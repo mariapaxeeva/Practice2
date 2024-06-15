@@ -1,7 +1,5 @@
 package graphics.ParametersPanel;
 
-import graphics.MainPanel;
-import logic.BasicLogic;
 import logic.DisasterLogic;
 
 import javax.swing.*;
@@ -14,8 +12,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 // Реализация панели, посредством которой осуществляется взаимодействие
 // с пользователем. Содержит панель с бегунками для установки начальных
@@ -29,7 +25,9 @@ public class ParametersPanel extends JPanel {
     private JSlider limitOfHuntingElkSlider = CustomSliders.newCustomSlider(0, 100, 2); // Лимит добычи лосей
     private JSlider limitOfHuntingPredatorSlider = CustomSliders.newCustomSlider(0, 100, 10); // Лимит добычи хищников
     private JSlider predatorsSlider = CustomSliders.newCustomSlider(0, 100, 57); // Количество хищников
-    private DisasterLogic disaster = new DisasterLogic();
+    JButton makeFireButton; // Кнопка начала пожара
+    JButton deforestationButton; // Кнопка вырубки леса
+    private DisasterLogic disaster = new DisasterLogic(); // Класс бедствий
 
     public ParametersPanel() {
         view();
@@ -77,8 +75,8 @@ public class ParametersPanel extends JPanel {
         ImageIcon fire = new ImageIcon("src/resources/fire.jpg");
         ImageIcon deforestation = new ImageIcon("src/resources/deforestation.jpg");
 
-        JButton makeFireButton = new JButton("Устроить пожар", fire);
-        JButton deforestationButton = new JButton("Вырубить лес", deforestation);
+        makeFireButton = new JButton("Устроить пожар", fire);
+        deforestationButton = new JButton("Вырубить лес", deforestation);
 
         buttonStyle(makeFireButton);
         buttonStyle(deforestationButton);
@@ -86,18 +84,7 @@ public class ParametersPanel extends JPanel {
         disasterButtons.add(makeFireButton);
         disasterButtons.add(deforestationButton);
 
-        makeFireButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                disaster.InvertIsFire();
-            }
-        });
-        deforestationButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                disaster.makeDeforestation();
-            }
-        });
+        buttonListeners();
     }
 
     public void reset() {
@@ -118,7 +105,7 @@ public class ParametersPanel extends JPanel {
         slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 int value = ((JSlider)e.getSource()).getValue();
-                label.setText(text + value + "%");
+                label.setText(text + value);
             }
         });
         settings.add(label);
@@ -135,7 +122,46 @@ public class ParametersPanel extends JPanel {
         button.setVerticalTextPosition(JButton.CENTER);
     }
 
-    // Метод изменения доступа к панели и ее содержимому
+    // Реакция на нажатие кнопок
+    private void buttonListeners() {
+        makeFireButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean b = disaster.InvertIsFire();
+                // Если начался пожар, нельзя вырубать лес
+                if (b) { deforestationButton.setEnabled(false); }
+            }
+        });
+        deforestationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] radius = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+                ImageIcon icon = new ImageIcon("src/resources/iconDeforestation.png");
+                UIManager.put("OptionPane.cancelButtonText", "Отмена");
+                // Диалоговое окно ввода радиуса вырубки
+                String radiusDeforestation = (String) JOptionPane.showInputDialog(
+                        ParametersPanel.disasterButtons,
+                        "Убедитесь, что на карте выделена\nячейка, и выберите радиус\nвырубки леса :",
+                        "Вырубка леса",
+                        JOptionPane.QUESTION_MESSAGE,
+                        icon, radius, radius[0]);
+                if (radiusDeforestation != null) {
+                    // Диалоговое окно подтверждения выбранного радиуса
+                    int result = JOptionPane.showConfirmDialog(ParametersPanel.disasterButtons,
+                            "Радиус вырубки: " + radiusDeforestation,
+                            "Вырубка леса",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            icon);
+                    if (result == JOptionPane.OK_OPTION) {
+                        disaster.setRadiusDeforestationArea(Integer.parseInt(radiusDeforestation));
+                    }
+                }
+            }
+        });
+    }
+
+    // Метод изменения доступа к панели настроек и ее содержимому
     public void setEnabledSettings(boolean b) {
         settings.setEnabled(b);
         elksSlider.setEnabled(b);
@@ -143,6 +169,13 @@ public class ParametersPanel extends JPanel {
         limitOfHuntingElkSlider.setEnabled(b);
         limitOfHuntingPredatorSlider.setEnabled(b);
         predatorsSlider.setEnabled(b);
+    }
+
+    // Метод изменения доступа к панели с кнопками
+    public void setEnabledDisasterButtons(boolean b) {
+        disasterButtons.setEnabled(b);
+        makeFireButton.setEnabled(b);
+        deforestationButton.setEnabled(b);
     }
 
     public int getValueElksSlider() {
