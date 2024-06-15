@@ -39,6 +39,7 @@ public class BasicLogic {
                         }
                     }
                     disaster.makeFire();
+                    disaster.makeDeforestation();
                     map.repaint();
                     StatisticsLogic.update();
                     MainPanel.statistics.update(++days);
@@ -462,7 +463,8 @@ public class BasicLogic {
             int xTarget = x + xStep;
             // Исключить миграцию охотников за пределы Алтайского края
             if (map.getKillerType(y, x) == MapCoder.KILLER_TYPE_HUNTER
-                    && map.getLandscapeType(yTarget, xTarget) == MapCoder.LANDSCAPE_TYPE_OUTSIDE) {
+                    && (map.getLandscapeType(yTarget, xTarget) == MapCoder.LANDSCAPE_TYPE_OUTSIDE
+                    || map.getLandscapeType(yTarget, xTarget) == MapCoder.LANDSCAPE_TYPE_FIRE)) {
                 return tryToMove(cellData, y, x, 0, 0);
             }
             if (!isCellInMapRange(yTarget, xTarget)) {
