@@ -29,6 +29,8 @@ public class StatisticsLogic {
     public static int elkDiedByPredator = 0;                // Количество лосей, умерших от нападения хищника
     public static int elkDiedByHunter = 0;                  // Количество лосей, умерших от рук охотника
     public static int predatorDiedByHunter = 0;             // Количество хищников, умерших от рук охотника
+    public static int elkDiedByFire = 0;                    // Количество лосей, умерших от пожара
+    public static int predatorDiedByFire = 0;               // Количество хищников, умерших от пожара
     public static int elkDiedByHunterForSeason = 0;         // Количество лосей, убитых охотниками за сезон
     public static int predatorDiedByHunterForSeason = 0;    // Количество хищников, убитых охотниками за сезон
     public static int limitOfHuntingElkForSeason = 0;       // Лимит добычи лосей (кол-во особей за сезон)
@@ -121,6 +123,8 @@ public class StatisticsLogic {
         elkDiedByPredator = 0;
         elkDiedByHunter = 0;
         predatorDiedByHunter = 0;
+        elkDiedByFire = 0;
+        predatorDiedByFire = 0;
         elkDiedByHunterForSeason = 0;
         predatorDiedByHunterForSeason = 0;
         babyElkWereBorn = 0;

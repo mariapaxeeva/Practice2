@@ -50,6 +50,7 @@ public class Statistics extends JScrollPane {
                     + "<br> &nbsp&nbsp&nbsp • От голода: %s"
                     + "<br> &nbsp&nbsp&nbsp • От нападения хищника: %s"
                     + "<br> &nbsp&nbsp&nbsp • От встречи с охотником: %s"
+                    + "<br> &nbsp&nbsp&nbsp • В пожаре: %s"
                     + "<br> Средний возраст популяции: %s"
                     + "<br>"
                     + "<br> Численность охотников: %s"
@@ -63,6 +64,7 @@ public class Statistics extends JScrollPane {
                     + "<br> &nbsp&nbsp&nbsp • От усталости: %s"
                     + "<br> &nbsp&nbsp&nbsp • От голода: %s"
                     + "<br> &nbsp&nbsp&nbsp • От встречи с охотником: %s"
+                    + "<br> &nbsp&nbsp&nbsp • В пожаре: %s"
                     + "<br>"
                     + "<br> Мигрировали %s особей:"
                     + "<br> &nbsp&nbsp&nbsp • Лосей: %s особей"
@@ -81,6 +83,7 @@ public class Statistics extends JScrollPane {
                     StatisticsLogic.elkDiedByHunger,
                     StatisticsLogic.elkDiedByPredator,
                     StatisticsLogic.elkDiedByHunter,
+                    StatisticsLogic.elkDiedByFire,
                     MainPanel.creatureInfo.formatDate(StatisticsLogic.getAverageElkAge()),
 
                     StatisticsLogic.hunter,
@@ -94,6 +97,7 @@ public class Statistics extends JScrollPane {
                     StatisticsLogic.predatorDiedByEnergy,
                     StatisticsLogic.predatorDiedByHunger,
                     StatisticsLogic.predatorDiedByHunter,
+                    StatisticsLogic.elkDiedByFire,
 
                     StatisticsLogic.elkMigrated + StatisticsLogic.predatorMigrated,
                     StatisticsLogic.elkMigrated,
