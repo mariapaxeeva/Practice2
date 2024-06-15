@@ -1,5 +1,9 @@
 package graphics.ParametersPanel;
 
+import graphics.MainPanel;
+import logic.BasicLogic;
+import logic.DisasterLogic;
+
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -8,6 +12,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 // Реализация панели, посредством которой осуществляется взаимодействие
 // с пользователем. Содержит панель с бегунками для установки начальных
@@ -21,6 +29,7 @@ public class ParametersPanel extends JPanel {
     private JSlider limitOfHuntingElkSlider = CustomSliders.newCustomSlider(0, 100, 2); // Лимит добычи лосей
     private JSlider limitOfHuntingPredatorSlider = CustomSliders.newCustomSlider(0, 100, 10); // Лимит добычи хищников
     private JSlider predatorsSlider = CustomSliders.newCustomSlider(0, 100, 57); // Количество хищников
+    private DisasterLogic disaster = new DisasterLogic();
 
     public ParametersPanel() {
         view();
@@ -50,7 +59,7 @@ public class ParametersPanel extends JPanel {
         disasterButtons.setBorder(new CompoundBorder(new TitledBorder (new LineBorder(Color.DARK_GRAY),
                 "Действия", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
                 new Font("serif", Font.ROMAN_BASELINE, 14), Color.DARK_GRAY), new EmptyBorder(20, 35, 30, 35)));
-        disasterButtons.setLayout(new GridLayout(3, 1, 0, 30));
+        disasterButtons.setLayout(new GridLayout(2, 1, 0, 30));
         this.add(disasterButtons);
     }
 
@@ -67,26 +76,36 @@ public class ParametersPanel extends JPanel {
     public void disasterButtons() {
         ImageIcon fire = new ImageIcon("src/resources/fire.jpg");
         ImageIcon deforestation = new ImageIcon("src/resources/deforestation.jpg");
-        ImageIcon epidemic = new ImageIcon("src/resources/epidemic.jpg");
 
         JButton makeFireButton = new JButton("Устроить пожар", fire);
         JButton deforestationButton = new JButton("Вырубить лес", deforestation);
-        JButton startEpidemicButton = new JButton("Начать эпидемию", epidemic);
 
         buttonStyle(makeFireButton);
         buttonStyle(deforestationButton);
-        buttonStyle(startEpidemicButton);
 
         disasterButtons.add(makeFireButton);
         disasterButtons.add(deforestationButton);
-        disasterButtons.add(startEpidemicButton);
+
+        makeFireButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                disaster.InvertIsFire();
+            }
+        });
+        deforestationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                disaster.makeDeforestation();
+            }
+        });
     }
 
     public void reset() {
-        huntersSlider.setValue(50);
-        limitOfHuntingElkSlider.setValue(6);
-        limitOfHuntingPredatorSlider.setValue(50);
-        predatorsSlider.setValue(50);
+        elksSlider.setValue(200);
+        huntersSlider.setValue(30);
+        limitOfHuntingElkSlider.setValue(2);
+        limitOfHuntingPredatorSlider.setValue(10);
+        predatorsSlider.setValue(57);
     }
 
     // Метод устанавливает ползунок с подписью о том, что он регулирует
@@ -109,7 +128,7 @@ public class ParametersPanel extends JPanel {
     // Метод определяет внешний вид кнопок с изображением
     public void buttonStyle(JButton button) {
         Font font = new Font("Serif", Font.BOLD, 30);
-        button.setPreferredSize(new Dimension(130,30));
+        button.setPreferredSize(new Dimension(120,20));
         button.setForeground(new Color(0xE3E3E3));
         button.setBackground(Color.LIGHT_GRAY);
         button.setHorizontalTextPosition(JButton.CENTER);

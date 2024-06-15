@@ -10,11 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+// Класс реализует основную логику модели, движение сущностей и их взаимодействие
 public class BasicLogic {
     private static int days = 1;        // Количество пройденных с начала симуляции дней
     private static Timer timer;
     private static int timerDelay = 100;
     private static Random random = new Random();
+    private static DisasterLogic disaster = new DisasterLogic();
 
     // Метод, запускающий/возобновляющий работу модели
     // создает и запускает таймер, генерирующий действия каждый тик,
@@ -36,6 +38,7 @@ public class BasicLogic {
                             perform(map.getDataAt(y, x), y, x);
                         }
                     }
+                    disaster.makeFire();
                     map.repaint();
                     StatisticsLogic.update();
                     MainPanel.statistics.update(++days);
@@ -567,8 +570,15 @@ public class BasicLogic {
         map.setCreaturePregnancy(0, y, x);
     }
 
+    // Метод удаляет все данные ячейки (x, y), кроме ландшафта и растения
+    public static void deletePlant(int y, int x) {
+        Map map = MainPanel.map;
+        map.setPlantType(0, y, x);
+        map.setPlantFood(0, y, x);
+    }
+
     // Метод для проверки, находится ли ячейка (x, y) в пределах карты
-    private static boolean isCellInMapRange(int y, int x) {
+    public static boolean isCellInMapRange(int y, int x) {
         return y >= 0 && y < Map.MAP_SIZE && x >= 0 && x < Map.MAP_SIZE;
     }
 
@@ -584,5 +594,9 @@ public class BasicLogic {
             throw new RuntimeException(String.format("Ошибка! Диапазон значений от [min] = [%s] до [max] = [%s].", min, max));
         }
         return min + random.nextInt(max - min + 1);
+    }
+
+    public static int getDays() {
+        return days;
     }
 }

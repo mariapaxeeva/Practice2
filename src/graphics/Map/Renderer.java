@@ -13,7 +13,7 @@ public class Renderer extends DefaultTableCellRenderer {
     private final static int LANDSCAPE_TYPE_COLOR_PLAIN             = 0xA5E087;
     private final static int LANDSCAPE_TYPE_COLOR_HILL              = 0xF2E085;
     private final static int LANDSCAPE_TYPE_COLOR_MOUNTAIN          = 0xBA8416;
-    private final static int LANDSCAPE_TYPE_COLOR_GRASS_PLAIN       = 0x5ABD20;
+    private final static int LANDSCAPE_TYPE_COLOR_FIRE              = 0xFF5E00;
     private final static int LANDSCAPE_TYPE_COLOR_OUTSIDE           = 0x8A8A8A;
     private final static int ELK_TYPE_COLOR_MALE                    = 0x010E82;
     private final static int ELK_TYPE_COLOR_FEMALE                  = 0xC75DC2;
@@ -56,8 +56,8 @@ public class Renderer extends DefaultTableCellRenderer {
                 color = LANDSCAPE_TYPE_COLOR_MOUNTAIN;
                 break;
             }
-            case MapCoder.LANDSCAPE_TYPE_GRASS_PLAIN: {
-                color = LANDSCAPE_TYPE_COLOR_GRASS_PLAIN;
+            case MapCoder.LANDSCAPE_TYPE_FIRE: {
+                color = LANDSCAPE_TYPE_COLOR_FIRE;
                 break;
             }
             case MapCoder.LANDSCAPE_TYPE_OUTSIDE: {
