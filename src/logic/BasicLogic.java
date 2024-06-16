@@ -220,7 +220,8 @@ public class BasicLogic {
     // Метод реализует процесс утоления голода посредством потребления растений
     // лосями и лосей хищниками.
     // Чем больше уровень голода, тем больше вероятность, что существо будет есть
-    // Вероятность рассчитывается по формуле probability = 2 * hunger - 20;
+    // Вероятность рассчитывается по формуле probability = 2 * hunger - 20 для лося
+    // и по формуле probability = 3 * hunger - 89 для хищника
     private static boolean tryToEat(long cellData, int y, int x) {
         Map map = MainPanel.map;
         boolean decideToEat = false;
@@ -268,7 +269,7 @@ public class BasicLogic {
                     }
                 }
             }
-            // Если рядом нет еды, то искать ближайшую ячейку со съедобными растениями
+            // Если рядом нет еды, то искать ближайшую ячейку со съедобными растениями или лосем
             // По гипотенузе прямоугольного треугольника с катетами xDistance и yDistance,
             // где xDistance и yDistance - расстояния от текущей ячейки до целевой по осям x и y.
             int minTarget = Map.MAP_SIZE * Map.MAP_SIZE + Map.MAP_SIZE * Map.MAP_SIZE;

@@ -100,6 +100,7 @@ public class DisasterLogic {
                         "Выделите ячейку!!!",
                         "Напоминание", JOptionPane.INFORMATION_MESSAGE,
                         icon);
+                radiusDeforestationArea = 0;
                 return;
             }
             // Удаление растений и запись ячеек в массив
